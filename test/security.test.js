@@ -102,3 +102,26 @@ test("Mikrofon faqat o‘z saytiga ruxsat etilgan (ovoz bilan kiritish), boshqa 
   assert.match(pp, /camera=\(\)/);
   assert.match(pp, /geolocation=\(\)/);
 });
+
+test("CSP: inline skript va style atributlari taqiqlangan", async () => {
+  const csp = (await fetch(base + "/")).headers.get("content-security-policy");
+  assert.match(csp, /script-src-attr 'none'/);
+  assert.match(csp, /style-src-attr 'none'/);
+  assert.ok(!csp.includes("unsafe-inline"));
+  const html = await (await fetch(base + "/")).text();
+  assert.ok(!/\sstyle=/.test(html), "HTML ichida inline style bo‘lmasligi kerak");
+});
+
+test("Fetch Metadata: boshqa saytdan kelgan POST Origin’siz ham rad etiladi", async () => {
+  const send = site => fetch(base + "/api/plan", { method:"POST", headers:{ "Content-Type":"application/json", "Sec-Fetch-Site": site }, body: JSON.stringify({ scenario:"ish_haqi" }) });
+  assert.equal((await send("cross-site")).status, 403);
+  assert.equal((await send("same-site")).status, 403);
+  assert.equal((await send("same-origin")).status, 200);
+});
+
+test("Service worker versiyasi relizga bog‘langan", async () => {
+  const r = await fetch(base + "/sw.js");
+  assert.equal(r.headers.get("cache-control"), "no-cache");
+  const src = await r.text();
+  assert.match(src, /const VERSION = "hy-[0-9a-f]{12}"/);
+});

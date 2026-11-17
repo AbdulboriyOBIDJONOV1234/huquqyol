@@ -33,9 +33,11 @@ app.disable("x-powered-by");
 app.use(compression());
 app.use(httpsRedirect);
 app.use(securityHeaders);
-app.use("/api", sameOrigin, requireJson, express.json({ limit: "32kb", strict: true }));
+app.use("/api", rateLimit({ max: 600, name:"api" }), sameOrigin, requireJson, express.json({ limit: "32kb", strict: true }));
 app.use((req, res, next) => { req.lang = resolveLang(req); next(); });
 
+// Fayl nomi: faqat xavfsiz belgilar (sarlavhaga in’ektsiya bo‘lmasligi uchun)
+const safeName = s => String(s).replace(/[^A-Za-z0-9._-]/g, "_").slice(0, 120);
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res)).catch(next);
 
 app.get("/api/health", (req, res) => res.json({ ok:true, ai: aiEnabled(), norms: NORMS.length, scenarios: SCENARIOS.length }));
@@ -71,7 +73,7 @@ app.post("/api/document/:format", rateLimit({ max: 30, name:"file" }), wrap(asyn
   const buf = fmt === "docx" ? await toDocx(model) : await toPdf(model);
   res.set({
     "Content-Type": fmt === "docx" ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : "application/pdf",
-    "Content-Disposition": `attachment; filename="HuquqYol-${model.scenario}-${model.recipient}.${fmt}"`
+    "Content-Disposition": `attachment; filename="${safeName(`HuquqYol-${model.scenario}-${model.recipient}.${fmt}`)}"`
   }).send(buf);
 }));
 
@@ -84,6 +86,10 @@ const hashOf = f => createHash("sha256").update(readFileSync(join(PUBLIC, f))).d
 const ASSETS = ["app.css", "app.js", "shared.js", "translit.js", "i18n.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png"];
 const MODULES = ["app.js", "shared.js", "translit.js", "i18n.js"];
 const VER = Object.fromEntries(ASSETS.map(f => [f, hashOf(f)]));
+// Service worker keshi har yangi relizda avtomatik almashadi: versiya — barcha resurslar xeshidan
+const BUILD = createHash("sha256").update(Object.values(VER).join("") + hashOf("index.html")).digest("hex").slice(0, 12);
+const SW = readFileSync(join(PUBLIC, "sw.js"), "utf8").replace("__BUILD__", BUILD);
+app.get("/sw.js", (req, res) => res.set({ "Cache-Control":"no-cache", "Service-Worker-Allowed":"/" }).type("js").send(SW));
 const versioned = (html, list) => list.reduce((h, f) => h.replaceAll(`"/${f}"`, `"/${f}?v=${VER[f]}"`), html);
 
 // Bosh sahifa serverda oldindan chiziladi (har bir til uchun alohida): matnlar, soha kartalari, namunalar va meta HTML ichida keladi.

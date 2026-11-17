@@ -43,7 +43,7 @@ Arxivni o‘zingiz yangidan yasash uchun: `npm run package`. Natija `dist/huquqy
 
    Yoki `~/huquqyol/.env` faylini `.env.example` asosida yarating.
 4. **Ishga tushirish.** **Create**, so‘ng **Restart** tugmasini bosing.
-5. **SSL.** cPanel → **SSL/TLS Status** → **Run AutoSSL** (Let’s Encrypt, bepul). SSL ishlagach, `FORCE_HTTPS` = `1` qo‘shing va yana **Restart** qiling.
+5. **SSL.** cPanel → **SSL/TLS Status** → **Run AutoSSL** (Let’s Encrypt, bepul). SSL ishlagach, `FORCE_HTTPS` = `1` va `PUBLIC_HOST` = domeningiz (masalan `huquqyol.uz`) qo‘shing va yana **Restart** qiling.
 6. **Tekshirish.** `https://domeningiz/api/health` manzili `{"ok":true,...}` qaytarishi kerak.
 
 Arxiv `node_modules` siz yuklangan bo‘lsa, shu sahifadagi **Run NPM Install** tugmasini bosing.

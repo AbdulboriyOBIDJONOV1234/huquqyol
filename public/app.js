@@ -275,7 +275,7 @@ function renderPlan(){
 function altsHTML(a){
   if (!a.source || a.source === "choice") return "";
   const ranked = a.retrieval?.scenarios || [], top = ranked.find(r => r.id === state.scn)?.score || 0;
-  const alts = ranked.filter(r => r.id !== state.scn && r.score > 0 && r.score >= top * (a.confidence < 0.5 ? 0.4 : 0.5)).slice(0, 2).map(r => scenarioMeta(r.id)).filter(Boolean);
+  const alts = ranked.filter(r => r.id !== state.scn && r.keywordHits > 0 && r.score >= top * (a.confidence < 0.5 ? 0.4 : 0.5)).slice(0, 2).map(r => scenarioMeta(r.id)).filter(Boolean);
   if (!alts.length) return "";
   return `<div class="alts"><span class="small muted">${t("altTitle")}</span>${alts.map(m => `<button class="chipbtn" type="button" data-alt="${m.id}">${esc(m.title)}</button>`).join("")}</div>`;
 }

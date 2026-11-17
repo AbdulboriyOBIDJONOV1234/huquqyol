@@ -26,7 +26,7 @@ test("Ruscha baza o‘zbekchaga to‘liq mos: tuzilma, kalitlar, matnlar", () =>
     assert.deepEqual(s.docs.map(d => d.id), u.docs.map(d => d.id));
     assert.deepEqual(s.deadline.months ?? s.deadline.days ?? s.deadline.years ?? null, u.deadline.months ?? u.deadline.days ?? u.deadline.years ?? null);
     for (const str of [s.title, s.lead, ...s.steps.map(x => x.t), ...s.evidence, ...s.fields.map(f => f.label), ...s.docs.flatMap(d => [d.label, d.title, ...d.howto.steps])])
-      assert.ok(!LATIN.test(str.replace(/my\.sud\.uz|my\.gov\.uz|Texnomart|Samsung|HuquqYo‘l|pm\.gov\.uz/g, "")), `${s.id}: «${str}» tarjima qilinmagan`);
+      assert.ok(!LATIN.test(str.replace(/my\.sud\.uz|my\.gov\.uz|Texnomart|Samsung|HuquqYo‘l|pm\.gov\.uz|cbu\.uz|murojaat\.gov\.uz/g, "")), `${s.id}: «${str}» tarjima qilinmagan`);
   }
   for (const n of ru.NORMS) assert.ok(/[а-я]/i.test(n.title) && /[а-я]/i.test(n.text), n.id);
   assert.equal(ru.NORM_BY_ID.m333.article, "Статья 333");
@@ -86,7 +86,13 @@ test("Ruscha matndan 11 holat tasniflanadi (AIsiz)", async () => {
     "Бывший муж не платит алименты на двоих детей": "aliment",
     "Обратился в хокимият, уже месяц нет ответа": "murojaat_javobsiz",
     "Хоким вынес незаконное решение о сносе моего магазина": "organ_qarori",
-    "СБДД выписали неправильный штраф по радару": "jarima",
+    "СБДД выписали неправильный штраф по радару": "yhxx_jarima",
+    "Съехал с квартиры, хозяин не возвращает залог": "ijara_depozit",
+    "С моей карты без моего ведома списали 2 млн сум": "bank_karta",
+    "После ДТП страховая компания не платит": "osgo",
+    "Пенсионный фонд не учёл часть моего стажа": "pensiya",
+    "Агентство взяло деньги за работу в Корее и обмануло": "migrant_agentlik",
+    "Третий день нет газа, отключили без предупреждения": "kommunal_sifat",
     "Друг не возвращает долг 20 млн сум, есть расписка": "qarz",
     "Иш берувчим 3 ойдан бери маош бермаяпти": "ish_haqi",
     "Соседская собака укусила меня": "boshqa"

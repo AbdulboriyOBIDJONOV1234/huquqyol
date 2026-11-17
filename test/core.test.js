@@ -54,6 +54,6 @@ test("Faktlar: summa, oy, ish beruvchi", () => {
 });
 
 test("Doiradan tashqari matn", async () => {
-  const r = await analyze("Qo‘shnim mashinamni urib ketdi, nima qilay");
+  const r = await analyze("Patent olish uchun qanday hujjatlar kerak");
   if (r.source === "rules") assert.equal(r.scenario, "boshqa");
 });

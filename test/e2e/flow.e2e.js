@@ -39,7 +39,7 @@ test("Soha → holat → reja → ariza → DOCX va PDF", { skip }, async () => 
   const p = await page();
   await p.goto(base);
   await p.waitForSelector(".domain");
-  assert.equal(await p.locator(".domain").count(), 6);
+  assert.equal(await p.locator(".domain").count(), 12);
   assert.deepEqual(await audit(p), []);
   await p.click("[data-domain='istemol']");
   await p.click("[data-case='nuqsonli_tovar']");
@@ -76,7 +76,7 @@ test("Erkin matn → aliment; doiradan tashqari matn", { skip }, async () => {
   assert.equal(await p.innerText("#v2 h1"), "Aliment undirish kerak");
   assert.equal(await p.inputValue("#c_children"), "2");
   await p.goto(base);
-  await p.fill("#problem", "Qo‘shnim mashinamni urib ketdi, nima qilay");
+  await p.fill("#problem", "Patent olish uchun qanday hujjatlar kerak");
   await p.click("#analyzeBtn");
   await p.waitForSelector("#v2 h1");
   assert.match(await p.innerText("#v2 h1"), /qamramaymiz/);
@@ -197,7 +197,7 @@ test("UX standartlari: 320px, teginish maydoni, xato bog‘lanishi, tasdiqlash, 
   await p.fill("#problem", "a");
   assert.equal(await p.isVisible("#askErr"), false);
   // Doiradan tashqari ekranida keyingi qadam bor
-  await p.fill("#problem", "Qo‘shnim mashinamni urib ketdi, nima qilay");
+  await p.fill("#problem", "Patent olish uchun qanday hujjatlar kerak");
   await p.click("#analyzeBtn");
   await p.waitForSelector("#v2 [data-to]");
   await p.click("#v2 [data-to]");

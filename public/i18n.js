@@ -14,7 +14,7 @@ export function plural(n, forms){
 }
 
 const M = {
-  metaDesc:{ uz:"HuquqYo‘l — huquqingiz buzilganda: qonun, qadamlar va tayyor ariza. Mehnat, iste’molchi, aliment, davlat idoralari, jarima, qarz.", ru:"HuquqYo‘l — если ваши права нарушены: закон, шаги и готовое заявление. Труд, защита потребителей, алименты, госорганы, штрафы, долги." },
+  metaDesc:{ uz:"HuquqYo‘l — huquqingiz buzilganda: qonun, qadamlar va tayyor ariza. Mehnat, iste’molchi, oila, ijara, kommunal, bank va mikroqarz, yo‘l-transport, pensiya, migrantlar, davlat idoralari, qarz.", ru:"HuquqYo‘l — если ваши права нарушены: закон, шаги и готовое заявление. Труд, потребители, семья, аренда, коммунальные услуги, банки и микрозаймы, транспорт, пенсии, мигранты, госорганы, долги." },
   title:{ uz:"HuquqYo‘l — huquqiy yo‘l xaritasi", ru:"HuquqYo‘l — правовая дорожная карта" },
   skip:{ uz:"Asosiy qismga o‘tish", ru:"Перейти к основному содержанию" },
   homeLabel:{ uz:"HuquqYo‘l — boshiga qaytish", ru:"HuquqYo‘l — на главную" },
@@ -46,7 +46,7 @@ const M = {
   howtoFor:{ uz:"Qanday topshiriladi: {label}", ru:"Как подать: {label}" },
   disclaimerB:{ uz:"Bu huquqiy maslahat emas.", ru:"Это не юридическая консультация." },
   disclaimer:{ uz:"Ilova ma’lumot beradi va hujjat loyihasini tayyorlaydi; muhim qaror oldidan yurist bilan maslahatlashing.", ru:"Сервис даёт информацию и готовит проект документа; перед важным решением посоветуйтесь с юристом." },
-  sources:{ uz:"Manbalar: Mehnat, Oila, Fuqarolik va Ma’muriy javobgarlik kodekslari, Iste’molchilar va Murojaatlar to‘g‘risidagi qonunlar —", ru:"Источники: Трудовой, Семейный, Гражданский кодексы, Кодекс об административной ответственности, законы о защите прав потребителей и об обращениях —" },
+  sources:{ uz:"Manbalar: Mehnat, Oila, Fuqarolik va Ma’muriy javobgarlik kodekslari; iste’molchilar, murojaatlar, banklar, mikromoliya, OSGO, pensiya ta’minoti va xususiy bandlik agentliklari to‘g‘risidagi qonunlar —", ru:"Источники: Трудовой, Семейный, Гражданский кодексы, Кодекс об административной ответственности; законы о защите прав потребителей, об обращениях, о банках, о микрофинансовой деятельности, об ОСГО, о пенсионном обеспечении и о частных агентствах занятости —" },
   checked:{ uz:"2026-yil noyabr holatiga tekshirilgan.", ru:"Проверено по состоянию на ноябрь 2026 г." },
   local:{ uz:"Kiritgan ma’lumotlaringiz faqat shu qurilmada saqlanadi.", ru:"Введённые данные хранятся только на этом устройстве." },
   wipe:{ uz:"Ma’lumotlarimni o‘chirish", ru:"Удалить мои данные" },

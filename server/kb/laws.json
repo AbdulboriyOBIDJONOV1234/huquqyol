@@ -38,5 +38,35 @@
   "name": "Davlat boji to‘g‘risidagi qonun",
   "full": "«Davlat boji to‘g‘risida»gi Qonun (O‘RQ-600, 06.01.2020)",
   "url": "https://lex.uz/docs/4680955"
+ },
+ "fk2": {
+  "name": "Fuqarolik kodeksi (II qism)",
+  "full": "O‘zbekiston Respublikasining Fuqarolik kodeksi, ikkinchi qism (29.08.1996)",
+  "url": "https://lex.uz/docs/180550"
+ },
+ "bank": {
+  "name": "Banklar to‘g‘risidagi qonun",
+  "full": "«Banklar va bank faoliyati to‘g‘risida»gi Qonun (O‘RQ-580 tahririda, 05.11.2019)",
+  "url": "https://lex.uz/acts/12011"
+ },
+ "mfo": {
+  "name": "Mikromoliya faoliyati to‘g‘risidagi qonun",
+  "full": "«Nobank kredit tashkilotlari va mikromoliya faoliyati to‘g‘risida»gi Qonun (O‘RQ-765, 20.04.2022)",
+  "url": "https://lex.uz/acts/5972413"
+ },
+ "osgo": {
+  "name": "OSGO to‘g‘risidagi qonun",
+  "full": "«Transport vositalari egalarining fuqarolik javobgarligini majburiy sug‘urta qilish to‘g‘risida»gi Qonun (O‘RQ-155, 21.04.2008)",
+  "url": "https://lex.uz/acts/1342476"
+ },
+ "pens": {
+  "name": "Pensiya ta’minoti to‘g‘risidagi qonun",
+  "full": "«Fuqarolarning davlat pensiya ta’minoti to‘g‘risida»gi Qonun (938-XII, 03.09.1993)",
+  "url": "https://lex.uz/acts/112312"
+ },
+ "xab": {
+  "name": "Xususiy bandlik agentliklari to‘g‘risidagi qonun",
+  "full": "«Xususiy bandlik agentliklari to‘g‘risida»gi Qonun (O‘RQ-501, 16.10.2018)",
+  "url": "https://lex.uz/docs/3992894"
  }
 }

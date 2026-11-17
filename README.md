@@ -8,15 +8,21 @@ Vaziyatni ovoz bilan aytish mumkin (brauzer qo‘llasa). Tahlil noaniq bo‘lsa,
 
 Taqdimot ssenariysi va hakamlar savollariga javoblar — [DEMO.md](DEMO.md). Hostingga joylashtirish (cPanel, VPS, Docker, Render) — [DEPLOY.md](DEPLOY.md).
 
-## Qamrab olingan sohalar (6 soha, 11 holat)
+## Qamrab olingan sohalar (12 soha, 23 holat)
 
 | Soha | Holatlar | Asosiy manba | Muddat | Kalkulyator | Arizalar |
 |---|---|---|---|---|---|
 | Mehnat | Ish haqi to‘lanmasligi; noqonuniy bo‘shatish; ta’til berilmasligi; bo‘shatishda hisob-kitob | Mehnat kodeksi (O‘RQ-798) | 3 yoki 6 oy | MK 333-modda kompensatsiyasi | Ish beruvchi, mehnat inspeksiyasi, sud |
 | Iste’molchi | Sifatsiz tovar; sifatli tovarni qaytarish | Iste’molchilar huquqlari to‘g‘risidagi qonun (221-I), 13–18, 22, 29-moddalar | Kafolat muddati / 6 oy; 10 kun | Penya: narxning 1%i × kechikkan kun | Sotuvchi, Raqobat va iste’molchilar qo‘mitasi, sud |
 | Oila | Aliment undirish | Oila kodeksi, 96, 99, 136-moddalar | Muddatsiz (OK 12-modda) | 1/4 · 1/3 · 1/2 ulush, eng kam miqdor | Sud |
+| Ijara va uy-joy | Garov pulini qaytarmaslik; muddatidan oldin chiqarish | FK 540, 551, 1023-moddalar | 3 yil; muddatsiz | — | Uy egasi, sud |
+| Kommunal xizmatlar | Ortiqcha hisob; xizmat uzilishi yoki sifatsizligi | Iste’molchilar huquqlari to‘g‘risidagi qonun, 19-modda; FK 1023 | 3 yil; 6 oy | — | Xizmat ko‘rsatuvchi, iste’molchilar qo‘mitasi, sud |
+| Bank va mikroqarz | Kartadan ruxsatsiz yechilgan pul; mikroqarz bo‘yicha ortiqcha foiz va jarima | Banklar to‘g‘risidagi qonun; O‘RQ-765, 28, 32, 33-moddalar | Muddatsiz (tezkor); 3 yil | Yillik chegara: qarzning 50%i va ortiqcha summa | Bank/kreditor, Markaziy bank, sud |
+| Yo‘l-transport | YHXX jarimasiga shikoyat; OSGO bo‘yicha sug‘urta to‘lovi | MJtK; O‘RQ-155, 19, 23, 25-moddalar | 10 kun; 3 yil | 50% / 70% chegirma | Yuqori organ, sud, sug‘urtachi |
+| Pensiya va nafaqa | Pensiya rad etildi yoki kam hisoblandi; ijtimoiy nafaqa rad etildi | Pensiya ta’minoti to‘g‘risidagi qonun, 45, 47–49-moddalar; ma’muriy sud | 6 oy | — | Yuqori organ, ma’muriy sud |
+| Mehnat migrantlari | Bandlik agentligi aldovi; xorijda maosh berilmasligi yoki pasport olib qo‘yilishi | Xususiy bandlik agentliklari to‘g‘risidagi qonun (O‘RQ-501), 15, 15¹, 17, 20-moddalar | 3 yil; muddatsiz | — | Agentlik, Migratsiya agentligi, konsullik, sud |
 | Davlat idoralari | Javobsiz murojaat; noqonuniy qaror | Murojaatlar to‘g‘risidagi qonun (6, 28, 36-moddalar); ma’muriy sud | 15 kun + 6 oy; 6 oy | — | Yuqori organ, ma’muriy sud |
-| Jarimalar | Ma’muriy jarimaga shikoyat | MJtK (10 kunlik shikoyat muddati, 332¹-modda chegirmasi) | 10 kun | 50% / 70% chegirma sanalari bilan | Yuqori organ, sud |
+| Boshqa jarimalar | Ma’muriy jarimaga shikoyat (inspeksiyalar va boshqa organlar) | MJtK (10 kunlik shikoyat muddati, 332¹-modda chegirmasi) | 10 kun | 50% / 70% chegirma sanalari bilan | Yuqori organ, sud |
 | Qarz | Qarzni undirish | Fuqarolik kodeksi, 150, 732-moddalar | 3 yil | — | Qarzdor, sud |
 
 ## Ishga tushirish
@@ -27,8 +33,8 @@ Node.js 18.18 yoki undan yangi versiya kerak (tavsiya: 20 yoki 22).
 npm install
 cp .env.example .env      # ANTHROPIC_API_KEY ni yozing (ixtiyoriy)
 npm start                 # http://localhost:3000
-npm test                  # 45 ta unit/API test (jumladan ruscha va kirillcha)
-npm run test:e2e          # 6 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
+npm test                  # 50 ta unit/API test (jumladan ruscha va kirillcha)
+npm run test:e2e          # 7 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
 ```
 
 API kaliti bo‘lmasa ham ilova to‘liq ishlaydi. Bu holda tahlilni BM25 qidiruvi va kalit so‘zlar bajaradi. Kalit qo‘shilsa, tahlilni Claude bajaradi. Claude faqat qidiruv topgan normalarga tayanadi va bazada yo‘q modda raqamlari javobdan avtomatik olib tashlanadi.
@@ -140,6 +146,15 @@ Shablon sintaksisi:
   - ma’muriy sudga murojaatning 6 oylik muddati va jismoniy shaxslar uchun davlat boji yo‘qligi (uza.uz, gov.uz/advice);
   - sudga elektron murojaat — my.sud.uz (gov.uz/advice);
   - YHXX jarimasi ustidan my.gov.uz orqali elektron shikoyat (kursiv.media).
+- 2026-yil noyabrda lex.uz’dagi asl matn bo‘yicha qo‘shilganlar (yangi 6 soha):
+  - FK 540 (muddatsiz ijara — ko‘chmas mulk uchun 3 oy ogohlantirish), 551 (ijara beruvchi talabi bilan faqat sud orqali bekor qilish), 1023 (asossiz boyish);
+  - Iste’molchilar huquqlari to‘g‘risidagi qonun, 19-modda (xizmat sifati, 20 kun, 1% penya);
+  - O‘RQ-765, 28, 32, 33-moddalar (mikroqarz bo‘yicha yillik to‘lovlar qarzning yarmidan oshmaydi);
+  - O‘RQ-155 (OSGO), 19, 23, 25-moddalar (15 kunda qaror, 5 ish kunida to‘lov);
+  - 938-XII (pensiya), 45, 47, 48, 49-moddalar;
+  - O‘RQ-501 (xususiy bandlik agentliklari), 15, 15¹, 17, 20-moddalar;
+  - Markaziy bankning iste’molchilar huquqlarini himoya qilish xizmati: (71) 200-00-44 (cbu.uz).
+- Modda raqamisiz berilgan normalar (banklar to‘g‘risidagi qonundagi javobgarlik va bank siri; Markaziy bankka shikoyat) mazmuni bo‘yicha tekshirilgan, lekin amaldagi tahrirdagi modda raqami tasdiqlanmagan. Ijtimoiy nafaqa bo‘yicha alohida qonun normasi keltirilmagan: holat Murojaatlar to‘g‘risidagi qonun va ma’muriy sud tartibiga tayanadi.
 - 333-modda kompensatsiyasini hisoblash usuli amaliyotda bahsli. Shuning uchun ilova past talqinni asosiy summa sifatida, yuqori talqinni esa oraliq sifatida ko‘rsatadi. Markaziy bank stavkasi `CB_RATE` (default 14%) orqali o‘rnatiladi.
 - **Bu huquqiy maslahat emas.** Ilova ma’lumot beradi va hujjat loyihasini tayyorlaydi.
 

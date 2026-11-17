@@ -54,12 +54,21 @@ const SYNONYMS = [
   [/otpusk|dam olish/, "mehnat ta’tili"],
   [/trudovoy|daftarcha/, "mehnat daftarchasi"],
   [/raschyot|rasschet|oxirgi pul/, "hisob-kitob"],
-  [/shtraf|gai|radar/, "jarima ma’muriy huquqbuzarlik qaror shikoyat"],
+  [/shtraf|jarima/, "jarima ma’muriy huquqbuzarlik qaror shikoyat"],
   [/raspiska|tilxat|qarzga/, "qarz shartnomasi qaytarish"],
   [/garantiya|brak|buzuq|buzilib/, "nuqsonli tovar kafolat"],
   [/razmer|o‘lcham|mos kelmadi/, "sifatli tovarni almashtirish"],
   [/alement|aliment|bolamga|bolalarimga/, "aliment ota-ona ta’minot bola"],
-  [/hokimlik|idora|javob bermay/, "murojaat ko‘rib chiqish muddati"]
+  [/hokimlik|idora|javob bermay/, "murojaat ko‘rib chiqish muddati"],
+  [/kvartira|ijara|arenda|depozit|zalog|uy egasi/, "ijara garov asossiz boyish qaytarish"],
+  [/svet|elektr|gaz|suv|kommunal|hisoblagich|schyotchik/, "xizmat sifati iste’molchi qayta hisoblash"],
+  [/karta|humo|uzcard|bank|yechib/, "bank mijoz mablag‘ saqlanishi javobgarlik"],
+  [/mikroqarz|mikrozaym|mikrokredit|lombard|kollektor/, "mikroqarz foiz komissiya jarima chegara"],
+  [/osgo|osago|strahovka|sug‘urta|avtohalokat|dtp/, "sug‘urta to‘lovi muddati"],
+  [/radar|kamera|yhxb|gai|svetofor/, "jarima qaror shikoyat yhxx"],
+  [/pensiya|staj/, "pensiya tayinlash qayta hisoblash"],
+  [/nafaqa|kam ta’minlangan|ijtimoiy/, "ma’muriy sud qaror murojaat"],
+  [/agentlik|vositachi|chet el|xorij|migrant|koreya|rossiya/, "xususiy bandlik agentligi xorijda ish"]
 ];
 export const expandQuery = text => {
   const t = normalize(text);

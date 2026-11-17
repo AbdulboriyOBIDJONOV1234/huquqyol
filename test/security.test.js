@@ -65,9 +65,9 @@ test("Bosh sahifa serverda chiziladi; versiyali fayllar bir yil keshlanadi; gzip
   const r = await fetch(base + "/", { headers:{ "Accept-Encoding":"gzip" } });
   const html = await r.text();
   assert.equal(r.headers.get("cache-control"), "no-cache");
-  assert.equal((html.match(/data-domain="/g) || []).length, 6);
+  assert.equal((html.match(/data-domain="/g) || []).length, 12);
   const meta = JSON.parse(html.match(/<script type="application\/json" id="meta-data">([\s\S]*?)<\/script>/)[1]);
-  assert.equal(meta.scenarios.length, 11);
+  assert.equal(meta.scenarios.length, 23);
   assert.ok(!/<\/script>[\s\S]*<script(?! type="application\/json")[^>]*>[^<]/.test(html.split('id="meta-data"')[1].slice(100)), "inline JS yo‘q");
   const css = html.match(/\/app\.css\?v=([a-f0-9]+)/);
   assert.ok(css, "app.css versiyalangan");
@@ -101,4 +101,27 @@ test("Mikrofon faqat o‘z saytiga ruxsat etilgan (ovoz bilan kiritish), boshqa 
   assert.match(pp, /microphone=\(self\)/);
   assert.match(pp, /camera=\(\)/);
   assert.match(pp, /geolocation=\(\)/);
+});
+
+test("CSP: inline skript va style atributlari taqiqlangan", async () => {
+  const csp = (await fetch(base + "/")).headers.get("content-security-policy");
+  assert.match(csp, /script-src-attr 'none'/);
+  assert.match(csp, /style-src-attr 'none'/);
+  assert.ok(!csp.includes("unsafe-inline"));
+  const html = await (await fetch(base + "/")).text();
+  assert.ok(!/\sstyle=/.test(html), "HTML ichida inline style bo‘lmasligi kerak");
+});
+
+test("Fetch Metadata: boshqa saytdan kelgan POST Origin’siz ham rad etiladi", async () => {
+  const send = site => fetch(base + "/api/plan", { method:"POST", headers:{ "Content-Type":"application/json", "Sec-Fetch-Site": site }, body: JSON.stringify({ scenario:"ish_haqi" }) });
+  assert.equal((await send("cross-site")).status, 403);
+  assert.equal((await send("same-site")).status, 403);
+  assert.equal((await send("same-origin")).status, 200);
+});
+
+test("Service worker versiyasi relizga bog‘langan", async () => {
+  const r = await fetch(base + "/sw.js");
+  assert.equal(r.headers.get("cache-control"), "no-cache");
+  const src = await r.text();
+  assert.match(src, /const VERSION = "hy-[0-9a-f]{12}"/);
 });

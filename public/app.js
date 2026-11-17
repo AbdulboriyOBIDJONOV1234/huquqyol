@@ -7,6 +7,8 @@ const fmtSum = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " 
 const iso = d => { const z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; };
 const monthsAgo = n => { const d = new Date(); d.setHours(0,0,0,0); d.setMonth(d.getMonth() - n); return d; };
 const debounce = (fn, ms = 250) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+// Kenglik CSSOM orqali beriladi (inline style atributi yo‘q — CSP da 'unsafe-inline' kerak emas)
+const applyWidths = root => root?.querySelectorAll("[data-w]").forEach(x => { x.style.width = Math.max(0, Math.min(100, Number(x.dataset.w) || 0)) + "%"; });
 const KEY = "huquqyol:v2";
 const store = {
   load(){ try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; } },
@@ -273,7 +275,7 @@ function renderPlan(){
 function altsHTML(a){
   if (!a.source || a.source === "choice") return "";
   const ranked = a.retrieval?.scenarios || [], top = ranked.find(r => r.id === state.scn)?.score || 0;
-  const alts = ranked.filter(r => r.id !== state.scn && r.score > 0 && r.score >= top * (a.confidence < 0.5 ? 0.4 : 0.5)).slice(0, 2).map(r => scenarioMeta(r.id)).filter(Boolean);
+  const alts = ranked.filter(r => r.id !== state.scn && r.keywordHits > 0 && r.score >= top * (a.confidence < 0.5 ? 0.4 : 0.5)).slice(0, 2).map(r => scenarioMeta(r.id)).filter(Boolean);
   if (!alts.length) return "";
   return `<div class="alts"><span class="small muted">${t("altTitle")}</span>${alts.map(m => `<button class="chipbtn" type="button" data-alt="${m.id}">${esc(m.title)}</button>`).join("")}</div>`;
 }
@@ -287,10 +289,11 @@ function renderDeadline(){
     <div class="small tip">${esc(p.deadlineNote)}</div>${date}` : `${head}
     <div class="big">${Math.abs(p.daysLeft)}<small>${t(p.daysLeft < 0 ? "daysLate" : "days", { n: Math.abs(p.daysLeft) })}</small></div>
     <div class="small muted">${t("lastDay")} <b class="ink">${esc(p.deadlineText)}</b> · ${esc(t("termSuffix", { term: p.deadlineTerm }))}</div>
-    <div class="bar ${cls}" role="progressbar" aria-label="${t("progressLabel")}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p.progress * 100)}"><i style="width:${Math.round(p.progress * 100)}%"></i></div>
+    <div class="bar ${cls}" role="progressbar" aria-label="${t("progressLabel")}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(p.progress * 100)}"><i data-w="${Math.round(p.progress * 100)}"></i></div>
     <div class="small tip">${esc(p.risk.tip)}</div>
     ${p.deadlineNote ? `<div class="small muted dnote">${esc(p.deadlineNote)}</div>` : ""}${date}
     ${p.daysLeft >= 0 ? `<button class="btn ghost sm calbtn" id="calBtn" type="button">${t("calendar")}</button>` : ""}`;
+  applyWidths($("#deadlineCard"));
   $("#calBtn")?.addEventListener("click", downloadIcs);
   $("#trigger").addEventListener("change", e => {
     if (!e.target.value) return;
@@ -419,7 +422,8 @@ function renderMissing(){
   // To‘ldirilgan ulush: ko‘rinib turgan maydonlardagi qiymatlar va hali yetishmayotgan joylar bo‘yicha
   const filled = [...document.querySelectorAll("#docForm .field:not([hidden]) [data-k]")].filter(x => x.dataset.k !== "extra" && x.value.trim()).length;
   const pct = n === 0 ? 100 : Math.round(filled / (filled + n) * 100);
-  el.innerHTML = `<span>${esc(n === 0 ? t("allFilled") : t("missingN", { n, list: state.missing.map(x => x.label).join(", ") }))}</span><span class="mbar" aria-hidden="true"><i style="width:${pct}%"></i></span>`;
+  el.innerHTML = `<span>${esc(n === 0 ? t("allFilled") : t("missingN", { n, list: state.missing.map(x => x.label).join(", ") }))}</span><span class="mbar" aria-hidden="true"><i data-w="${pct}"></i></span>`;
+  applyWidths(el);
   $("#dlNote").hidden = n === 0;
   $("#dlNote").textContent = n ? t("dlNote", { n }) : "";
   document.querySelectorAll(".field.need").forEach(f => { f.classList.remove("need"); f.querySelector("[data-k]")?.removeAttribute("aria-required"); });

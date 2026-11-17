@@ -271,5 +271,152 @@
   "article": "150-modda",
   "title": "Umumiy da’vo muddati",
   "text": "Umumiy da’vo muddati 3 yil. U huquq buzilganini bilgan yoki bilishi kerak bo‘lgan kundan boshlanadi. Muddat o‘tgan bo‘lsa ham sud arizani qabul qiladi, lekin javobgar so‘rasa, da’vo rad etilishi mumkin."
+ },
+ {
+  "id": "fk540",
+  "law": "fk2",
+  "article": "540-modda",
+  "title": "Muddatsiz ijarani bekor qilish",
+  "text": "Ijara muddati ko‘rsatilmagan bo‘lsa, shartnoma muddatsiz tuzilgan hisoblanadi. Har bir tomon uni istalgan vaqtda bekor qilishi mumkin, lekin ikkinchi tomonni yozma ogohlantirishi shart: ko‘char mulk uchun 1 oy, ko‘chmas mulk (uy, kvartira) uchun 3 oy oldin. Qonun yoki shartnomada boshqa muddat belgilanishi mumkin."
+ },
+ {
+  "id": "fk551",
+  "law": "fk2",
+  "article": "551-modda",
+  "title": "Ijara beruvchi talabi bilan muddatidan oldin bekor qilish",
+  "text": "Ijara beruvchi shartnomani muddatidan oldin faqat sud orqali va qonundagi asoslar bo‘lsa bekor qildira oladi: mulkdan shartnoma yoki maqsadiga jiddiy zid foydalanish, mulkni jiddiy yomonlashtirish, ijara haqini ketma-ket ikki martadan ortiq o‘z vaqtida to‘lamaslik va boshqalar. Bundan oldin ijarachiga yozma ogohlantirish berib, majburiyatni bajarishi uchun imkon berilishi shart."
+ },
+ {
+  "id": "fk1023",
+  "law": "fk2",
+  "article": "1023-modda",
+  "title": "Asossiz boyishni qaytarish majburiyati",
+  "text": "Qonun yoki shartnomada asos bo‘lmagan holda boshqa shaxs hisobidan mol-mulk (pul) olgan yoki tejagan shaxs uni qaytarishi shart. Ijara tugagach qaytarilmagan garov puli yoki ortiqcha undirilgan to‘lovni shu qoida asosida talab qilish mumkin."
+ },
+ {
+  "id": "ihq19",
+  "law": "ihq",
+  "article": "19-modda",
+  "title": "Sifatsiz xizmat ko‘rsatilganda iste’molchining huquqlari",
+  "text": "Ijrochi xizmatni shartnomada belgilangan muddatda, hajmda va sifatda ko‘rsatishi shart. Xizmatda nuqson bo‘lsa, iste’molchi uni bepul bartaraf etishni, narxni mutanosib kamaytirishni, qayta bajarishni yoki shartnomani bekor qilib, zararni to‘liq qoplashni talab qilishi mumkin. Nuqson odatda talabdan keyin 20 kun ichida tuzatiladi; kechikkan har kun uchun xizmat narxining 1 foizi penya to‘lanadi (jami xizmat narxidan oshmaydi)."
+ },
+ {
+  "id": "bank_jav",
+  "law": "bank",
+  "article": null,
+  "title": "Bankning mijoz oldidagi javobgarligi",
+  "text": "Banklar mijozlar va omonatchilar mablag‘larining saqlanishi hamda o‘z majburiyatlarini bajarishi uchun javobgar. Banklar mijozlarni depozit va kredit operatsiyalarining muddatlari va shartlari haqida muntazam xabardor qilishi shart."
+ },
+ {
+  "id": "bank_sir",
+  "law": "bank",
+  "article": null,
+  "title": "Bank siri",
+  "text": "Bank mijozlarning operatsiyalari, hisobvaraqlari va omonatlari sirini kafolatlaydi. Jismoniy shaxsning hisobi bo‘yicha ma’lumot mijozning o‘ziga va qonuniy vakiliga, qonunda nazarda tutilgan hollarda sud va tergov organlariga beriladi."
+ },
+ {
+  "id": "cbu_shik",
+  "law": "bank",
+  "article": null,
+  "title": "Markaziy bankka shikoyat",
+  "text": "Bank, mikromoliya tashkiloti yoki lombard huquqingizni buzsa, Markaziy bankning bank xizmatlari iste’molchilari huquqlarini himoya qilish xizmatiga murojaat qilish mumkin: ishonch telefoni (71) 200-00-44, cbu.uz virtual qabulxonasi yoki murojaat.gov.uz."
+ },
+ {
+  "id": "mfo32",
+  "law": "mfo",
+  "article": "32-modda",
+  "title": "Mikroqarz bo‘yicha to‘lovlar chegarasi",
+  "text": "Mikromoliya tashkilotlari va lombardlar mikroqarz bo‘yicha foiz, komissiya va neustoyka (jarima, penya) ni jami yiliga qarz summasining yarmidan ortiq undira olmaydi. Arizani ko‘rib chiqish va hisobni yuritish uchun komissiya, qarzni muddatidan oldin qaytarganlik uchun jarima olish taqiqlanadi. Foiz stavkalari Markaziy bank belgilagan chegaradan oshmasligi kerak."
+ },
+ {
+  "id": "mfo28",
+  "law": "mfo",
+  "article": "28-modda",
+  "title": "Markaziy bank choralari",
+  "text": "Mikromoliya tashkilotlari va lombardlar iste’molchilar huquqlarini buzganda Markaziy bank qonunbuzarlikni bartaraf etish to‘g‘risida majburiy ko‘rsatma berishi va jarima qo‘llashi mumkin."
+ },
+ {
+  "id": "mfo33",
+  "law": "mfo",
+  "article": "33-modda",
+  "title": "Iste’molchining himoyalanish huquqi",
+  "text": "Mikromoliya va lombard xizmatlari iste’molchisi buzilgan huquqlarini himoya qilish uchun sudga va boshqa vakolatli davlat organlariga murojaat qilishga haqli."
+ },
+ {
+  "id": "osgo19",
+  "law": "osgo",
+  "article": "19-modda",
+  "title": "Jabrlanuvchining arizasi",
+  "text": "Sug‘urta to‘lovini olish uchun jabrlanuvchi sug‘urtachiga zararni qoplash talabi bilan yozma ariza beradi va kerakli hujjatlarni ilova qiladi."
+ },
+ {
+  "id": "osgo23",
+  "law": "osgo",
+  "article": "23-modda",
+  "title": "Sug‘urta to‘lovi muddatlari",
+  "text": "Sug‘urtachi yozma yoki elektron arizadan keyin 15 kundan kechiktirmay sug‘urta to‘lovi yoki rad etish to‘g‘risida qaror qabul qiladi. To‘lov qaror qabul qilingan kundan 5 ish kunidan kechiktirmay amalga oshiriladi."
+ },
+ {
+  "id": "osgo25",
+  "law": "osgo",
+  "article": "25-modda",
+  "title": "Kafolat jamg‘armasidan kompensatsiya",
+  "text": "Qonunda belgilangan hollarda sug‘urtachi to‘lay olmasa, zarar Kafolat jamg‘armasidan qoplanadi. Kompensatsiya to‘lovi talabi zarar yetkazilgan kundan 3 yil ichida qo‘yilishi mumkin."
+ },
+ {
+  "id": "pens45",
+  "law": "pens",
+  "article": "45-modda",
+  "title": "Pensiya arizasini ko‘rib chiqish muddati",
+  "text": "Pensiya tayinlash to‘g‘risidagi ariza va anketa kelib tushgan kundan 10 kundan kechiktirmay ko‘rib chiqiladi."
+ },
+ {
+  "id": "pens47",
+  "law": "pens",
+  "article": "47-modda",
+  "title": "Pensiya qaysi kundan tayinlanadi",
+  "text": "Yosh bo‘yicha pensiyaga ariza huquq paydo bo‘lgan kundan 60 kun ichida berilsa, pensiya pensiya yoshiga yetgan kundan, aks holda ariza berilgan kundan tayinlanadi."
+ },
+ {
+  "id": "pens48",
+  "law": "pens",
+  "article": "48-modda",
+  "title": "Pensiya qaroriga shikoyat",
+  "text": "Pensiya tayinlash to‘g‘risidagi qaror ustidan sudga shikoyat qilish mumkin."
+ },
+ {
+  "id": "pens49",
+  "law": "pens",
+  "article": "49-modda",
+  "title": "Pensiyani qayta hisoblash",
+  "text": "Pensioner arizasiga ko‘ra pensiya qayta hisoblanadi, masalan, qo‘shimcha staj yoki ish haqi to‘g‘risidagi hujjatlar taqdim etilganda."
+ },
+ {
+  "id": "xab15",
+  "law": "xab",
+  "article": "15-modda",
+  "title": "Xizmat ko‘rsatish shartnomasi",
+  "text": "Xususiy bandlik agentligi izlovchi bilan yozma shartnoma tuzadi va uni «Xorijda ish» tizimida ro‘yxatdan o‘tkazadi. Izlovchi to‘lagan pul maxsus depozitga qo‘yiladi va agentlikka faqat shartnoma bajarilgandan keyin o‘tkaziladi."
+ },
+ {
+  "id": "xab15_1",
+  "law": "xab",
+  "article": "15¹-modda",
+  "title": "Agentlik va xorijiy ish beruvchining javobgarligi",
+  "text": "Agentlik va xorijiy ish beruvchi izlovchi oldida majburiyatlar bajarilmagani uchun solidar javob beradi. Xorijiy ish beruvchi yoki hamkor bilan shartnomasiz xorijda ishga joylashtirish xizmatini ko‘rsatish taqiqlanadi."
+ },
+ {
+  "id": "xab17",
+  "law": "xab",
+  "article": "17-modda",
+  "title": "Xorijga yuborilganlar oldidagi majburiyatlar",
+  "text": "Agentlik xorijga yuborilgan shaxslarning mehnat faoliyatini kuzatib boradi. Xorijiy ish beruvchi kerakli sharoitlarni ta’minlamasa, agentlik zudlik bilan boshqa ish beruvchi topishi yoki fuqaroni O‘zbekistonga qaytarishi shart; agentlik buni bajarmasa, fuqaroni Migratsiya agentligi qaytaradi."
+ },
+ {
+  "id": "xab20",
+  "law": "xab",
+  "article": "20-modda",
+  "title": "Davlat nazorati",
+  "text": "Vazirlar Mahkamasi huzuridagi Migratsiya agentligi xususiy bandlik agentliklari reyestrini yuritadi, ularning qonunchilikka rioya etishini nazorat qiladi va tekshiradi. Xorijda ishga joylashtirish litsenziyasini ham shu agentlik beradi."
  }
 ]

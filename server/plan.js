@@ -54,7 +54,11 @@ const CT = {
     alMin:m => `Eng kam miqdor: bir bola uchun ${m} (2026-yil 1-sentabrdan). Aniq summani sud belgilaydi.`,
     fd:"Jarimani tez to‘lash chegirmasi", fdIn:"Jarima summasini kiriting", fdN0:"15 kun ichida — 50%, 30 kun ichida — 70% to‘lanadi (MJtK 332¹-modda). Shikoyat qilinsa, chegirma yo‘q.",
     fdTill:(d, p) => `${d}gacha (${p})`, fdLate:"Shikoyat qilinsa yoki kechiksa",
-    fdN:"Shikoyat qilsangiz va yutqazsangiz, jarima to‘liq to‘lanadi. Qaror aniq noto‘g‘ri bo‘lsa, shikoyat qiling."
+    fdN:"Shikoyat qilsangiz va yutqazsangiz, jarima to‘liq to‘lanadi. Qaror aniq noto‘g‘ri bo‘lsa, shikoyat qiling.",
+    lc:"Mikroqarz to‘lovlari chegarasi", lcIn:"Qarz summasini kiriting", lcN0:"Foiz, komissiya va jarimalar jami yiliga qarz summasining yarmidan oshmasligi kerak (32-modda).",
+    lcCap:"Yillik chegara (qarzning 50%)", lcCharged:"Sizdan undirilgan", lcOver:"Qonundan ortiq",
+    lcOverV:m => `${m} ortiqcha`, lcOk:"Undirilgan summa chegaradan oshmagan. Lekin ko‘rib chiqish komissiyasi yoki muddatidan oldin to‘lash jarimasi olingan bo‘lsa, ular baribir qonunga zid.",
+    lcN:"Bir yillik foiz, komissiya va jarimalarni kiritsangiz, ortiqcha qismini hisoblaymiz.", lcBad:"Ortiqcha summani qaytarishni talab qiling: avval tashkilotdan, keyin Markaziy bank yoki sud orqali."
   },
   ru:{
     l333:"Вам дополнительно положено", l333in:"Введите сумму долга", l333n0:"Компенсация за каждый день задержки (ст. 333 ТК).",
@@ -68,7 +72,11 @@ const CT = {
     alMin:m => `Минимум: ${m} на одного ребёнка (с 1 сентября 2026 г.). Точную сумму определяет суд.`,
     fd:"Скидка за быструю оплату штрафа", fdIn:"Введите сумму штрафа", fdN0:"В течение 15 дней — 50%, в течение 30 дней — 70% (ст. 332¹ КоАО). При обжаловании скидки нет.",
     fdTill:(d, p) => `до ${d} (${p})`, fdLate:"При обжаловании или просрочке",
-    fdN:"Если обжалуете и проиграете, штраф уплачивается полностью. Обжалуйте, если постановление явно неправильное."
+    fdN:"Если обжалуете и проиграете, штраф уплачивается полностью. Обжалуйте, если постановление явно неправильное.",
+    lc:"Предел платежей по микрозайму", lcIn:"Введите сумму займа", lcN0:"Проценты, комиссии и штрафы в сумме не должны превышать половины суммы займа в год (ст. 32).",
+    lcCap:"Годовой предел (50% займа)", lcCharged:"С вас взыскано", lcOver:"Сверх закона",
+    lcOverV:m => `${m} сверх предела`, lcOk:"Взысканная сумма не превышает предел. Но комиссия за рассмотрение заявки или штраф за досрочное погашение всё равно незаконны.",
+    lcN:"Введите проценты, комиссии и штрафы за год — посчитаем превышение.", lcBad:"Требуйте вернуть превышение: сначала у организации, затем через Центральный банк или суд."
   }
 };
 
@@ -95,6 +103,16 @@ export const CALCS = {
     const min = MIN_ALIMONY * children, byIncome = income * sh.f, val = Math.max(min, byIncome);
     return { title:T.al, value:`≈ ${M(val)}`, raw:{ share: sh.f, min, byIncome },
       note: (income ? T.alShare(sh, M(byIncome)) : T.alNoInc) + T.alMin(M(MIN_ALIMONY)) };
+  },
+  // Mikroqarz: foiz + komissiya + jarima jami yiliga qarzning yarmidan oshmasligi kerak (O‘RQ-765, 32-modda)
+  loanCap({ form, lang }){
+    const T = CT[lang], M = n => money(n, lang);
+    const loan = num(form.loan), charged = num(form.charged);
+    if (!loan) return { title:T.lc, value:T.lcIn, note:T.lcN0 };
+    const cap = Math.round(loan * 0.5), excess = Math.max(0, charged - cap);
+    if (!charged) return { title:T.lc, value:M(cap), raw:{ cap, excess:0 }, note:T.lcN };
+    const rows = [[T.lcCap, M(cap)], [T.lcCharged, M(charged)], [T.lcOver, M(excess)]];
+    return { title:T.lc, value: excess ? T.lcOverV(M(excess)) : M(cap), raw:{ cap, excess }, rows, note: excess ? T.lcBad : T.lcOk };
   },
   fineDiscount({ form, trigger, today, lang }){
     const T = CT[lang], M = n => money(n, lang), D = d => fmtDate(d, lang);

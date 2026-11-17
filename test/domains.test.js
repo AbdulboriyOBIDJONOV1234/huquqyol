@@ -18,7 +18,7 @@ test("Bilim bazasi yaxlit: har bir norma, maydon va shablon kaliti mavjud", () =
   }
 });
 
-test("11 holat matndan to‘g‘ri tasniflanadi", () => {
+test("23 holat matndan to‘g‘ri tasniflanadi", () => {
   const cases = {
     "Ish beruvchim 3 oydan beri maosh bermayapti": "ish_haqi",
     "Meni ogohlantirmasdan ishdan bo‘shatishdi": "ishdan_boshatish",
@@ -29,7 +29,19 @@ test("11 holat matndan to‘g‘ri tasniflanadi", () => {
     "Sobiq erim bolalarimga aliment to‘lamayapti": "aliment",
     "Hokimlikka murojaat qildim, bir oydan beri javob bermayapti": "murojaat_javobsiz",
     "Hokim qarori bilan uyimni buzib tashlashmoqchi, bu noqonuniy qaror": "organ_qarori",
-    "YHXB radar bo‘yicha noto‘g‘ri jarima soldi": "jarima",
+    "YHXB radar bo‘yicha noto‘g‘ri jarima soldi": "yhxx_jarima",
+    "Sanitariya inspeksiyasi do‘konimga noto‘g‘ri jarima soldi": "jarima",
+    "Kvartiradan chiqdim, uy egasi depozitni qaytarmayapti": "ijara_depozit",
+    "Uy egasi shartnoma tugamasdan kvartiradan chiqib ketishimni talab qilyapti": "ijara_chiqarish",
+    "Svetga ortiqcha hisob keldi, hisoblagich boshqa ko‘rsatyapti": "kommunal_hisob",
+    "3 kundan beri gaz yo‘q, ogohlantirmasdan uzib qo‘yishdi": "kommunal_sifat",
+    "Kartamdan bilmagan holda 2 million so‘m yechib olishdi": "bank_karta",
+    "Mikroqarzni muddatidan oldin to‘lasam ham jarima va katta foiz olishdi": "kredit_mfo",
+    "Avtohalokatdan keyin sug‘urta kompaniyasi pul to‘lamayapti": "osgo",
+    "Pensiya jamg‘armasi stajimning bir qismini hisobga olmadi": "pensiya",
+    "Kam ta’minlangan oila sifatida bolalar nafaqasini rad etishdi": "ijtimoiy_nafaqa",
+    "Koreyaga ishga yuboramiz deb agentlik pul olib, aldadi": "migrant_agentlik",
+    "Rossiyada ishlayapman, ish beruvchi pasportimni olib qo‘ydi va maosh bermayapti": "migrant_xorij",
     "Do‘stimga qarzga bergan 20 million so‘mni qaytarmayapti, tilxat bor": "qarz"
   };
   for (const [t, id] of Object.entries(cases)) assert.equal(rankScenarios(t)[0].id, id, t);
@@ -58,6 +70,21 @@ test("Kalkulyatorlar", () => {
   const f = p("jarima", "2026-11-01", { fine:"412000" });
   assert.match(f.value, /206 000/);   // hali 15 kun ichida — 50%
   assert.equal(f.rows.length, 3);
+  // Mikroqarz: yillik chegara — qarzning yarmi
+  assert.equal(p("kredit_mfo", "2026-10-01", { loan:"10000000" }).raw.cap, 5_000_000);
+  const lc = p("kredit_mfo", "2026-10-01", { loan:"10000000", charged:"6500000" });
+  assert.equal(lc.raw.excess, 1_500_000);
+  assert.match(lc.value, /1\s500\s000/);
+  assert.equal(p("kredit_mfo", "2026-10-01", { loan:"10000000", charged:"3000000" }).raw.excess, 0);
+});
+
+test("Yangi holatlar: muddatlar va OSGO qaror sanasi", () => {
+  const p = (scenario, triggerDate) => buildPlan({ scenario, triggerDate, today });
+  assert.equal(p("yhxx_jarima", "2026-11-01").deadline, "2026-11-11");
+  assert.equal(p("ijara_depozit", "2026-10-01").deadline, "2029-10-01");
+  assert.equal(p("pensiya", "2026-10-01").deadline, "2027-04-01");
+  assert.equal(p("ijara_chiqarish", "2026-10-01").deadline, null);
+  assert.ok(p("osgo", "2026-10-01").steps[1].when.includes("16-oktabr 2026-yil"));   // ariza + 15 kun
 });
 
 test("Har bir holatning har bir hujjati DOCX va PDF bo‘lib yasaladi", async () => {

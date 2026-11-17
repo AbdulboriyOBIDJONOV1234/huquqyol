@@ -7,11 +7,16 @@ const FORCE_HTTPS = /^(1|true)$/i.test(process.env.FORCE_HTTPS || "");
 const CSP = [
   "default-src 'self'",
   "script-src 'self'",
+  "script-src-attr 'none'",
   "style-src 'self'",
-  "style-src-attr 'unsafe-inline'",     // faqat dinamik kenglik (progress bar) uchun
+  "style-src-attr 'none'",              // dinamik kenglik CSSOM orqali beriladi, inline style yo‘q
   "img-src 'self' data:",
   "font-src 'self'",
   "connect-src 'self'",
+  "manifest-src 'self'",
+  "worker-src 'self'",
+  "media-src 'none'",
+  "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'none'",
@@ -19,11 +24,19 @@ const CSP = [
 ].join("; ");
 const CSP_HTTPS = CSP + "; upgrade-insecure-requests";
 
+// Host sarlavhasi: faqat to‘g‘ri xost nomi (va port). PUBLIC_HOST berilsa, yo‘naltirish faqat unga bo‘ladi —
+// soxta Host bilan boshqa saytga yo‘naltirish (open redirect / kesh zaharlash) mumkin emas.
+const PUBLIC_HOST = (process.env.PUBLIC_HOST || "").trim().toLowerCase();
+const HOST_RE = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*(?::\d{1,5})?$|^\[[0-9a-f:.]+\](?::\d{1,5})?$/i;
+export const validHost = h => typeof h === "string" && h.length <= 260 && HOST_RE.test(h);
+
 // FORCE_HTTPS=1 — http so‘rovlarni https ga yo‘naltirish (health check bundan mustasno)
 export function httpsRedirect(req, res, next){
   if (!FORCE_HTTPS || req.secure || req.path === "/api/health") return next();
   if (req.method !== "GET" && req.method !== "HEAD") return res.status(403).json({ error:"HTTPS required" });
-  res.redirect(308, `https://${req.headers.host}${req.originalUrl}`);
+  const host = PUBLIC_HOST || req.headers.host;
+  if (!validHost(host)) return res.status(400).type("text").send("Bad Request");
+  res.redirect(308, `https://${host}${req.originalUrl.startsWith("/") ? req.originalUrl : "/"}`);
 }
 
 export function securityHeaders(req, res, next){
@@ -35,6 +48,9 @@ export function securityHeaders(req, res, next){
     "Permissions-Policy": "camera=(), microphone=(self), geolocation=(), payment=(), usb=()",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
+    "Origin-Agent-Cluster": "?1",
+    "X-Permitted-Cross-Domain-Policies": "none",
+    "X-DNS-Prefetch-Control": "off",
     ...(req.secure ? { "Strict-Transport-Security": "max-age=31536000; includeSubDomains" } : {})
   });
   if (req.path.startsWith("/api/")) res.set("Cache-Control", "no-store");
@@ -49,9 +65,13 @@ export function requireJson(req, res, next){
 
 // Boshqa saytdan kelgan POST so‘rovlarni rad etish: brauzer Origin sarlavhasini qo‘yadi, u xostga mos bo‘lishi kerak.
 // Origin bo‘lmasa (curl, server-server) — ruxsat; brauzer esa POSTda uni har doim yuboradi.
+// Qo‘shimcha himoya: zamonaviy brauzer Sec-Fetch-Site yuboradi — boshqa saytdan kelgan so‘rov Origin’siz ham rad etiladi.
 export function sameOrigin(req, res, next){
+  if (req.method !== "POST") return next();
+  const site = req.headers["sec-fetch-site"];
+  if (site && site !== "same-origin" && site !== "none") return res.status(403).json({ error: msg(resolveLang(req), "origin") });
   const origin = req.headers.origin;
-  if (req.method !== "POST" || !origin) return next();
+  if (!origin) return next();
   let host = null;
   try { host = new URL(origin).host; } catch {}
   const own = [req.headers.host, req.app.get("trust proxy") ? req.headers["x-forwarded-host"] : null].filter(Boolean);

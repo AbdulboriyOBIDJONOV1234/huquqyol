@@ -15,14 +15,44 @@
   "desc": "Bolalar uchun aliment"
  },
  {
+  "id": "ijara",
+  "title": "Ijara va uy-joy",
+  "desc": "Garov puli, uydan chiqarish"
+ },
+ {
+  "id": "kommunal",
+  "title": "Kommunal xizmatlar",
+  "desc": "Ortiqcha hisob, svet, gaz, suv"
+ },
+ {
+  "id": "bank",
+  "title": "Bank va mikroqarz",
+  "desc": "Kartadan pul yechildi, ortiqcha foiz"
+ },
+ {
+  "id": "transport",
+  "title": "Yo‘l-transport",
+  "desc": "YHXX jarimasi, OSGO sug‘urtasi"
+ },
+ {
+  "id": "nafaqa",
+  "title": "Pensiya va nafaqa",
+  "desc": "Pensiya yoki nafaqa rad etildi"
+ },
+ {
   "id": "davlat",
   "title": "Davlat idoralari",
   "desc": "Javobsiz murojaat, noqonuniy qaror"
  },
  {
   "id": "jarima",
-  "title": "Jarimalar",
-  "desc": "Ma’muriy jarimaga shikoyat"
+  "title": "Boshqa jarimalar",
+  "desc": "Inspeksiya va boshqa organlar jarimasi"
+ },
+ {
+  "id": "migrant",
+  "title": "Mehnat migrantlari",
+  "desc": "Agentlik aldovi, xorijdagi muammo"
  },
  {
   "id": "fuqarolik",

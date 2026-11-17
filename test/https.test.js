@@ -29,3 +29,11 @@ test("HTTPS so‘rovda HSTS va upgrade-insecure-requests, Origin proxy xosti bil
     headers:{ "content-type":"application/json", "x-forwarded-proto":"https", "x-forwarded-host":"huquqyol.uz", origin:"https://huquqyol.uz" } });
   assert.equal(p.status, 200);
 });
+
+test("Soxta Host sarlavhasi bilan yo‘naltirish qilinmaydi", async () => {
+  const { request } = await import("node:http");
+  const { port } = server.address();
+  const status = await new Promise((res, rej) => request({ host:"127.0.0.1", port, path:"/", headers:{ host:"evil.com/x" } }, r => { r.resume(); res([r.statusCode, r.headers.location]); }).on("error", rej).end());
+  assert.equal(status[0], 400);
+  assert.equal(status[1], undefined);
+});

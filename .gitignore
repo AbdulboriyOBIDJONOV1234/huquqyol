@@ -3,3 +3,5 @@ node_modules/
 server/kb/lex-articles.json
 *.log
 dist/
+__pycache__/
+*.pyc

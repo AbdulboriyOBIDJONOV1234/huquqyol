@@ -15,6 +15,8 @@ import { cyrillicModel } from "../public/translit.js";
 import { domainCardsHTML, examplesHTML } from "../public/shared.js";
 import { makeT, LANGS, HTML_LANG } from "../public/i18n.js";
 import { resolveLang, parseLang, deepCyr, msg, LANG_COOKIE } from "./i18n.js";
+import { stats } from "./stats.js";
+import { statsPage } from "./statsPage.js";
 
 // Til: uz va ru o‘z bazasidan, cyr — uz natijasining kirill shakli
 const base = lang => lang === "ru" ? "ru" : "uz";
@@ -59,10 +61,17 @@ app.get("/api/meta", (req, res) => res.set("Vary", "Cookie, Accept-Language").js
 
 app.post("/api/analyze", rateLimit({ max: 15, name:"analyze" }), wrap(async (req, res) => {
   const v = vAnalyze(req.body);
-  res.json(out(req.lang, await analyze(v.text, base(req.lang))));
+  const r = await analyze(v.text, base(req.lang));
+  stats.record("analyze", { scenario: r.scenario, ip: req.ip });          // faqat natija holati; matn sanalmaydi ham, saqlanmaydi ham
+  res.json(out(req.lang, r));
 }));
 
-app.post("/api/plan", rateLimit({ max: 120, name:"plan" }), (req, res) => { const v = vPlan(req.body); res.json(out(req.lang, buildPlan({ ...v, lang: base(v.lang) }))); });
+app.post("/api/plan", rateLimit({ max: 120, name:"plan" }), (req, res) => {
+  const v = vPlan(req.body);
+  const p = buildPlan({ ...v, lang: base(v.lang) });
+  if (req.body?.open === true) stats.record("open", { scenario: p.scenario, domain: p.info.domain, ip: req.ip });   // reja birinchi ochilganda
+  res.json(out(req.lang, p));
+});
 
 app.post("/api/document/preview", rateLimit({ max: 240, name:"preview" }), (req, res) => res.json(buildModel(req)));
 
@@ -71,11 +80,16 @@ app.post("/api/document/:format", rateLimit({ max: 30, name:"file" }), wrap(asyn
   if (fmt !== "docx" && fmt !== "pdf") return res.status(404).json({ error: msg(req.lang, "format") });
   const model = buildModel(req);
   const buf = fmt === "docx" ? await toDocx(model) : await toPdf(model);
+  stats.record("doc", { scenario: model.scenario, ip: req.ip });
   res.set({
     "Content-Type": fmt === "docx" ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : "application/pdf",
     "Content-Disposition": `attachment; filename="${safeName(`HuquqYol-${model.scenario}-${model.recipient}.${fmt}`)}"`
   }).send(buf);
 }));
+
+// Anonim statistika: faqat yig‘ma sanoqlar (holat → soha)
+const SCEN_DOMAIN = Object.fromEntries(SCENARIOS.map(s => [s.id, s.domain]));
+app.get("/api/stats", (req, res) => res.json(stats.summary({ scenarioDomain: SCEN_DOMAIN })));
 
 app.use("/api", (req, res) => res.status(404).json({ error: msg(req.lang, "notFound") }));
 
@@ -114,6 +128,13 @@ app.get(["/", "/index.html"], (req, res) => {
   const fs = /(?:^|;\s*)hy_fs=([1-3])(?:;|$)/.exec(req.headers.cookie || "")?.[1];
   const html = fs ? INDEX[req.lang].replace("<html ", `<html data-fs="${fs}" `) : INDEX[req.lang];
   res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html").send(html);
+});
+app.get("/statistika", (req, res) => {
+  const forced = parseLang(req.query.lang);
+  if (forced) res.cookie(LANG_COOKIE, forced, { maxAge: 365 * 864e5, sameSite:"lax", path:"/" });
+  const fs = /(?:^|;\s*)hy_fs=([1-3])(?:;|$)/.exec(req.headers.cookie || "")?.[1];
+  res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html")
+    .send(statsPage({ lang: req.lang, s: stats.summary({ scenarioDomain: SCEN_DOMAIN }), cssHref: `/app.css?v=${VER["app.css"]}`, fs }));
 });
 // JS modullari ichidagi importlar ham versiyalanadi
 const rewriteImports = src => MODULES.reduce((h, f) => h.replaceAll(`"/${f}"`, `"/${f}?v=${VER[f]}"`).replaceAll(`"./${f}"`, `"/${f}?v=${VER[f]}"`), src);
@@ -159,7 +180,7 @@ export function start({ port = process.env.PORT || 3000, host = process.env.HOST
   const onListen = () => console.log(`HuquqYo‘l ishga tushdi: ${typeof p === "number" ? `http://${host || "localhost"}:${p}` : p}  (AI: ${aiEnabled() ? "Claude" : "o‘chiq — qidiruv rejimi"})`);
   const server = host && typeof p === "number" ? app.listen(p, host, onListen) : app.listen(p, onListen);
   server.requestTimeout = 30_000; server.headersTimeout = 15_000; server.keepAliveTimeout = 65_000;
-  const stop = () => { server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 8000).unref(); };
+  const stop = () => { stats.close(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 8000).unref(); };   // statistika diskka yoziladi
   process.once("SIGTERM", stop); process.once("SIGINT", stop);
   return server;
 }

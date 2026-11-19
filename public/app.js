@@ -180,7 +180,7 @@ async function openCase(a){
   state.evidence = [];
   if (!m.docs.some(d => d.id === state.recipient)) state.recipient = m.docs[0].id;
   $("#v2").innerHTML = `<div class="skeleton" aria-hidden="true"></div>`;
-  await refreshPlan(true);
+  await refreshPlan(true, true);
   renderDocView();
   persist();
   go(2);
@@ -198,8 +198,9 @@ function renderOut(){
 }
 
 /* ---------- 2. Reja ---------- */
-async function refreshPlan(full){
-  state.plan = await getJSON("/api/plan", { scenario: state.scn, triggerDate: state.trigger, form: cleanForm() });
+async function refreshPlan(full, open = false){
+  // open — holat endi ochildi (anonim statistikada bir murojaat sifatida sanaladi); kalkulyator yangilanishi sanalmaydi
+  state.plan = await getJSON("/api/plan", { scenario: state.scn, triggerDate: state.trigger, form: cleanForm(), ...(open ? { open:true } : {}) });
   if (full) renderPlan(); else { renderDeadline(); renderRoute(); renderCalc(); }
   persist();
 }

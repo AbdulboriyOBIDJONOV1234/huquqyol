@@ -5,3 +5,4 @@ server/kb/lex-articles.json
 dist/
 __pycache__/
 *.pyc
+data/

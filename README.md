@@ -33,8 +33,8 @@ Node.js 18.18 yoki undan yangi versiya kerak (tavsiya: 20 yoki 22).
 npm install
 cp .env.example .env      # ANTHROPIC_API_KEY ni yozing (ixtiyoriy)
 npm start                 # http://localhost:3000
-npm test                  # 55 ta unit/API test (jumladan ruscha va kirillcha)
-npm run test:e2e          # 9 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
+npm test                  # 61 ta unit/API test (jumladan ruscha va kirillcha)
+npm run test:e2e          # 10 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
 ```
 
 API kaliti bo‘lmasa ham ilova to‘liq ishlaydi. Bu holda tahlilni BM25 qidiruvi va kalit so‘zlar bajaradi. Kalit qo‘shilsa, tahlilni Claude bajaradi. Claude faqat qidiruv topgan normalarga tayanadi va bazada yo‘q modda raqamlari javobdan avtomatik olib tashlanadi.
@@ -104,6 +104,7 @@ Lighthouse (production rejim): **Performance 100, Accessibility 100, Best Practi
 - Rejada «Ariza tayyorlash» tugmasi doim ko‘rinib turadi. Muddat hisoblanadigan sana yonida uni tekshirish eslatmasi bor.
 - To‘ldirilmagan joylar hisoblab ko‘rsatiladi, to‘ldirish chizig‘i bilan. Bossangiz, kerakli maydonga olib boradi. Majburiy maydonlar `*` bilan belgilanadi.
 - Ariza Word yoki PDF qilib yuklab olinadi, brauzerdan chop etiladi yoki matn sifatida nusxalanadi.
+- **Anonim statistika** — `/statistika` sahifasi (footer’da havola) va `GET /api/stats`: sohalar va holatlar bo‘yicha murojaatlar, yasalgan hujjatlar, «doiradan tashqari» so‘rovlar ulushi, so‘nggi 30 kun. Saqlanmaydi: matn, ariza ma’lumotlari, IP, cookie, brauzer ma’lumoti. Bir kishi bir kunda bir holatni bir marta sanaladi — buning uchun IP tasodifiy kalit bilan HMAC qilinadi, iz faqat xotirada turadi va har kuni kalit bilan birga o‘chiriladi. Sanoqlar `data/stats.json` ga 30 soniyada bir atomar yoziladi; kunlik ma’lumot 400 kundan keyin o‘chiriladi. `STATS=0` — o‘chirish, `STATS_FILE` — fayl joyi. Sahifa JavaScript’siz, diagrammalar SVG va jadval ko‘rinishi bilan.
 - **Qulaylik (keksalar va ko‘rishi zaif foydalanuvchilar uchun)** — sarlavhadagi «Aa Qulaylik» tugmasi:
   - *Shrift o‘lchami*: Oddiy, Katta (115%), Juda katta (130%), Eng katta (150%). Barcha matnlar bitta `--fs` ko‘paytiruvchisi orqali kattalashadi, katta o‘lchamlarda kartalar kamroq ustunga o‘tadi; 320 px ekranda ham gorizontal siljish yo‘q. Tanlov `hy_fs` cookie’da saqlanadi va server sahifani darhol shu o‘lchamda chizadi (sakrash bo‘lmaydi).
   - *Ovozli o‘qish*: «Sahifani o‘qib berish» (bosh sahifa, reja yoki ariza), rejada va arizada alohida «Tinglash» tugmalari. Belgilangan matn bo‘lsa, faqat o‘sha qism o‘qiladi. O‘qilayotgan qism ekranda belgilanadi, tepada «Pauza / To‘xtatish» paneli chiqadi, Esc — to‘xtatish, tezlik «Sekin» yoki «Oddiy».

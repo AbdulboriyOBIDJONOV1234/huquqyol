@@ -313,3 +313,26 @@ test("Qulaylik: shrift o‘lchami saqlanadi, sahifa va reja ovozda o‘qiladi, o
   assert.match(await q.innerText(".toast"), /o‘zbekcha ovoz topilmadi/);
   assert.deepEqual(q.errors, []);
 });
+
+test("Anonim statistika: holat ochilganda sanaladi, sahifa footer’dan ochiladi va qulaylik talablariga mos", { skip }, async () => {
+  const p = await page();
+  const before = await (await fetch(base + "api/stats")).json();
+  await p.goto(base);
+  await p.waitForSelector(".domain");
+  await p.click("[data-domain='kommunal']");
+  await p.click("[data-case='kommunal_sifat']");
+  await p.waitForSelector("#v2 h1");
+  await p.fill("#problem", "x").catch(() => {});                  // kalkulyator/forma o‘zgarishlari sanalmaydi
+  const after = await (await fetch(base + "api/stats")).json();
+  assert.equal((after.byScenario.kommunal_sifat || 0) - (before.byScenario.kommunal_sifat || 0), 1);
+  await p.goto(base);
+  await p.click("footer a[href='/statistika']");
+  await p.waitForSelector(".stattiles");
+  assert.match(await p.innerText("h1"), /Anonim statistika/);
+  assert.ok(await p.locator(".bars tbody tr").count() >= 12);
+  assert.deepEqual(await audit(p), []);
+  const m = await page({ viewport:{ width:320, height:640 } });
+  await m.goto(base + "statistika?lang=ru");
+  assert.equal(await m.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  assert.deepEqual([...p.errors, ...m.errors], []);
+});

@@ -125,3 +125,15 @@ test("Service worker versiyasi relizga bog‘langan", async () => {
   const src = await r.text();
   assert.match(src, /const VERSION = "hy-[0-9a-f]{12}"/);
 });
+
+test("Shrift o‘lchami cookie bo‘yicha sahifa chizilishidan oldin qo‘llanadi; noto‘g‘ri qiymat e’tiborsiz", async () => {
+  const get = c => fetch(base + "/", { headers:{ cookie:c } }).then(r => r.text());
+  assert.match(await get("hy_fs=3"), /<html data-fs="3" lang=/);
+  assert.match(await get("a=1; hy_fs=2"), /<html data-fs="2" lang=/);
+  for (const bad of ["hy_fs=0", "hy_fs=9", 'hy_fs="><script>', "hy_fs=3x"]) assert.ok(!/data-fs=/.test((await get(bad)).slice(0, 200)), bad);
+  const html = await get("");
+  assert.match(html, /id="a11yPanel"/);
+  const appjs = await (await fetch(base + "/app.js")).text();
+  assert.match(appjs, /"\/a11y\.js\?v=[0-9a-f]{10}"/);            // modul versiyalangan holda import qilinadi
+  assert.equal((await fetch(base + "/a11y.js")).status, 200);
+});

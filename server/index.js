@@ -83,8 +83,8 @@ app.use("/api", (req, res) => res.status(404).json({ error: msg(req.lang, "notFo
 // Fayl nomiga kontent xeshi (?v=...) qo‘shiladi: brauzer faylni bir yil keshlaydi, yangi versiyada URL o‘zgaradi.
 const PUBLIC = join(here, "..", "public");
 const hashOf = f => createHash("sha256").update(readFileSync(join(PUBLIC, f))).digest("hex").slice(0, 10);
-const ASSETS = ["app.css", "app.js", "shared.js", "translit.js", "i18n.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png"];
-const MODULES = ["app.js", "shared.js", "translit.js", "i18n.js"];
+const ASSETS = ["app.css", "app.js", "shared.js", "translit.js", "i18n.js", "a11y.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png"];
+const MODULES = ["app.js", "shared.js", "translit.js", "i18n.js", "a11y.js"];
 const VER = Object.fromEntries(ASSETS.map(f => [f, hashOf(f)]));
 // Service worker keshi har yangi relizda avtomatik almashadi: versiya — barcha resurslar xeshidan
 const BUILD = createHash("sha256").update(Object.values(VER).join("") + hashOf("index.html")).digest("hex").slice(0, 12);
@@ -110,7 +110,10 @@ const INDEX = Object.fromEntries(LANGS.map(l => [l, renderIndex(l)]));
 app.get(["/", "/index.html"], (req, res) => {
   const forced = parseLang(req.query.lang);
   if (forced) res.cookie(LANG_COOKIE, forced, { maxAge: 365 * 864e5, sameSite:"lax", path:"/" });   // ?lang=ru havolasi tilni eslab qoladi
-  res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html").send(INDEX[req.lang]);
+  // Tanlangan shrift o‘lchami (cookie) sahifa chizilishidan oldin qo‘llanadi — matn «sakramaydi»
+  const fs = /(?:^|;\s*)hy_fs=([1-3])(?:;|$)/.exec(req.headers.cookie || "")?.[1];
+  const html = fs ? INDEX[req.lang].replace("<html ", `<html data-fs="${fs}" `) : INDEX[req.lang];
+  res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html").send(html);
 });
 // JS modullari ichidagi importlar ham versiyalanadi
 const rewriteImports = src => MODULES.reduce((h, f) => h.replaceAll(`"/${f}"`, `"/${f}?v=${VER[f]}"`).replaceAll(`"./${f}"`, `"/${f}?v=${VER[f]}"`), src);

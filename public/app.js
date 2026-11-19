@@ -2,6 +2,7 @@
 import { esc, ICONS, examples, domainCardsHTML, examplesHTML } from "/shared.js";
 import { makeT, normLang } from "/i18n.js";
 import { toCyrillic as toCyr } from "/translit.js";
+import { getFs, setFs, ttsSupported, speak, pause as ttsPauseToggle, stop as ttsStop, isSpeaking } from "/a11y.js";
 const $ = s => document.querySelector(s);
 const fmtSum = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 const iso = d => { const z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; };
@@ -78,6 +79,7 @@ const fieldSpec = k => [...state.meta.applicant, ...(scenarioMeta(state.scn)?.fi
 /* ---------- Navigatsiya (brauzer "orqaga" tugmasi ishlaydi) ---------- */
 function go(n, { push = true } = {}){
   if (n > 1 && !state.plan) n = 1;
+  if (isSpeaking()) ttsStop();                              // boshqa sahifaga o‘tganda o‘qish to‘xtaydi
   [1,2,3].forEach(i => { $("#v" + i).hidden = i !== n; });
   $("#stepsNav").hidden = n === 1;                         // bosh sahifada qadamlar pastdagi «Qanday ishlaydi» qatorida
   document.querySelectorAll(".stepper button").forEach(b => {
@@ -222,7 +224,8 @@ function renderPlan(){
   $("#v2").innerHTML = `
     <button class="back" type="button" data-go="1">${t("otherSituation")}</button>
     <div class="case-head">
-      <div class="headmeta"><span class="tag">${esc(state.meta.domains.find(d => d.id === info.domain)?.title || "")} · ${esc(info.short)}</span><span class="small muted">${esc(source)}</span></div>
+      <div class="headmeta"><span class="tag">${esc(state.meta.domains.find(d => d.id === info.domain)?.title || "")} · ${esc(info.short)}</span><span class="small muted">${esc(source)}</span>
+        <button class="btn ghost sm ttsplan" id="ttsPlan" type="button" data-tts><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>${t("ttsListen")}</button></div>
       <h1>${esc(info.title)}</h1>
       <p>${esc(a.summary || info.lead)}</p>
       ${a.missing?.length ? `<p class="small warnline">${t("needForDoc")} ${a.missing.map(esc).join(", ")}</p>` : ""}
@@ -256,6 +259,7 @@ function renderPlan(){
     <div class="planextra"><button class="linkbtn" type="button" id="printPlan">${t("printPlan")}</button></div>
     <div class="cta"><span class="small muted ctahint">${t("nextHint")}</span><button class="btn primary" type="button" data-go="3">${t("makeDoc")}</button></div>`;
   $("#printPlan").addEventListener("click", printPlan);
+  $("#ttsPlan").addEventListener("click", () => readAloud(planItems()));
   $("#route").addEventListener("click", e => { const b = e.target.closest("[data-of]"); if (b) jumpToOffice(b.dataset.of); });
   renderDeadline(); renderRoute(); renderCalc(); renderEvCount();
   $("#evid").addEventListener("change", e => {
@@ -366,6 +370,92 @@ function renderEvCount(){
   $("#evCount").textContent = t("evCount", { a: state.evidence.length, b: state.plan.evidence.length })
     + (must.length ? " " + t("evMustCount", { a: must.filter(i => state.evidence.includes(i)).length, b: must.length }) : "");
 }
+
+/* ---------- Qulaylik: shrift o‘lchami va ovozli o‘qish ---------- */
+const plain = el => el ? el.innerText.replace(/\s+/g, " ").trim() : "";
+const item = (el, text) => ({ el, text: text ?? plain(el) });
+function homeItems(){
+  return [$("#v1 h1"), $("#v1 .lead"), $("#pickTitle:not([hidden])"), $("#pickHead:not([hidden]) h2"), ...document.querySelectorAll("#cases .case")].filter(Boolean).map(el => item(el));
+}
+function planItems(){
+  const p = state.plan; if (!p) return [];
+  const out = [item($("#v2 h1")), item($("#v2 .case-head > p"))];
+  const days = p.deadline == null ? t("unlimited") : `${Math.abs(p.daysLeft)} ${t(p.daysLeft < 0 ? "daysLate" : "days", { n: Math.abs(p.daysLeft) })}. ${t("lastDay")} ${p.deadlineText}`;
+  out.push(item($("#deadlineCard"), `${p.deadlineLabel}: ${days}. ${p.risk.label}. ${p.risk.tip || ""}`));
+  if (p.calc && $("#calcCard")) out.push(item($("#calcCard"), `${p.calc.title}: ${p.calc.value}. ${p.calc.note || ""}`));
+  out.push(item($("#route")?.previousElementSibling, t("whatToDo")));
+  p.steps.forEach((st, i) => out.push(item($(`#route li:nth-child(${i + 1})`), `${t("ttsStep", { n: i + 1 })}. ${st.org}. ${st.t}. ${st.when}. ${st.body}`)));
+  const must = p.evidence.filter((_, i) => p.evidenceInfo?.[i]?.need === "m");
+  if (must.length) out.push(item($("#evid"), `${t("ttsMust")}: ${must.join(". ")}.`));
+  if (p.offices?.length){
+    out.push(item($("#whereH"), t("whereH")));
+    for (const o of p.offices) out.push(item(document.getElementById("of-" + o.id),
+      [o.name, o.role, o.address, ...(o.phones || []).map(x => `${x.label}: ${x.text}`)].filter(Boolean).join(". ")));
+  }
+  return out.filter(x => x.text);
+}
+function docItems(){
+  if (!state.blocks) return [];
+  const out = [item($("#missing"))];
+  for (const [i, b] of state.blocks.entries()){
+    const el = $("#paper").children[i];
+    const text = b.t === "addr" ? b.lines.map(partsText).join(". ") : b.t === "list" ? b.items.map((x, n) => `${n + 1}. ${partsText(x)}`).join(". ")
+      : b.t === "p" ? partsText(b.parts) : b.t === "sign" ? `${b.left} ${partsText(b.right)}` : b.text || "";
+    out.push(item(el, text.replace(/\[([^\]]+)\]/g, "$1")));
+  }
+  return out.filter(x => x.text);
+}
+function pageItems(){
+  const sel = String(window.getSelection?.() || "").replace(/\s+/g, " ").trim();
+  if (sel.length > 2) return [{ text: sel }];
+  const v = [1, 2, 3].find(i => !$("#v" + i).hidden) || 1;
+  return v === 2 ? planItems() : v === 3 ? docItems() : homeItems();
+}
+
+let ttsRate = 1, warnedRu = false;
+try { ttsRate = Number(localStorage.getItem("huquqyol:rate")) || 1; } catch {}
+function ttsUi(st){
+  const on = st === "playing" || st === "paused";
+  $("#ttsBar").hidden = !on;
+  document.body.classList.toggle("speaking", on);
+  $("#ttsState").textContent = t(st === "paused" ? "ttsPaused" : "ttsReading");
+  $("#ttsPause").textContent = t(st === "paused" ? "ttsResume" : "ttsPause");
+  document.querySelectorAll("[data-tts]").forEach(b => b.setAttribute("aria-pressed", String(on)));
+  if (st === "error") toast(t("ttsErr"));
+}
+async function readAloud(items){
+  if (!ttsSupported()){ toast(t("ttsNone")); return; }
+  if (isSpeaking()){ ttsStop(); return; }                  // ikkinchi bosish — to‘xtatish
+  const r = await speak(items, { lang: LANG === "ru" ? "ru" : "uz", rate: ttsRate, onState: ttsUi });
+  if (r.mode === "ru" && !warnedRu && LANG !== "ru"){ warnedRu = true; toast(t("ttsNoUz")); }
+}
+function syncA11y(){
+  const fs = getFs();
+  document.querySelectorAll(".fsopts [data-fs]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.fs) === fs)));
+  document.querySelectorAll(".speed [data-rate]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.rate) === ttsRate)));
+}
+function initA11y(){
+  const btn = $("#a11yBtn"), panel = $("#a11yPanel");
+  btn.addEventListener("click", () => { const open = panel.hidden; panel.hidden = !open; btn.setAttribute("aria-expanded", String(open)); if (open) panel.querySelector("[aria-pressed='true']")?.focus(); });
+  panel.addEventListener("click", e => {
+    const f = e.target.closest(".fsopts [data-fs]");
+    if (f){ const v = setFs(Number(f.dataset.fs)); syncA11y(); announce(t("fsDone", { v: t("fs" + v) })); return; }
+    const r = e.target.closest(".speed [data-rate]");
+    if (r){ ttsRate = Number(r.dataset.rate); try { localStorage.setItem("huquqyol:rate", String(ttsRate)); } catch {} syncA11y(); }
+  });
+  $("#ttsPage").addEventListener("click", () => readAloud(pageItems()));
+  $("#ttsDoc").addEventListener("click", () => readAloud(docItems()));
+  $("#ttsPause").addEventListener("click", ttsPauseToggle);
+  $("#ttsStopBtn").addEventListener("click", () => ttsStop());
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (isSpeaking()){ ttsStop(); return; }
+    if (!panel.hidden && !$("#dlg").open){ panel.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.focus(); }
+  });
+  if (!ttsSupported()){ $("#ttsNote").textContent = t("ttsNone"); $("#ttsPage").disabled = true; $("#ttsDoc").hidden = true; }
+  syncA11y();
+}
+initA11y();
 
 /* ---------- Kalendar eslatmasi (.ics) va rejani chop etish ---------- */
 const icsEsc = s => String(s).replace(/[\\;,]/g, m => "\\" + m).replace(/\r?\n/g, "\\n");

@@ -8,6 +8,7 @@ import { documentModel } from "../server/documents.js";
 import { buildPlan } from "../server/plan.js";
 import { makeT, fmtDate, termText, plural } from "../public/i18n.js";
 import { resolveLang } from "../server/i18n.js";
+import { toCyrillic } from "../public/translit.js";
 
 let server, base;
 before(() => new Promise(r => { server = app.listen(0, () => { base = `http://127.0.0.1:${server.address().port}`; r(); }); }));
@@ -142,4 +143,20 @@ test("Uzun hujjatda sahifa raqamlari qo‘yiladi", async () => {
   const m = documentModel({ scenario:"ish_haqi", recipient:"court", lang:"ru", form:{ fio:"Каримов Азиз", extra:"Длинный текст. ".repeat(250) } });
   const pdf = (await toPdf(m)).toString("latin1");
   assert.ok((pdf.match(/\/Type \/Page\b/g) || []).length >= 2);
+});
+
+test("Ruscha idoralar va dalillar: matn tarjima qilingan, raqam va havolalar o‘zgarmagan", () => {
+  const uz = kbFor("uz"), ru = kbFor("ru");
+  for (const [id, o] of Object.entries(ru.OFFICES)){
+    assert.ok(/[а-я]/i.test(o.name) && /[а-я]/i.test(o.role), id);
+    assert.deepEqual(o.phones?.map(p => p.tel), uz.OFFICES[id].phones?.map(p => p.tel), id);
+    assert.deepEqual(o.links?.map(l => l.url), uz.OFFICES[id].links?.map(l => l.url), id);
+    for (const p of [...(o.phones || []), ...(o.abroad || [])]) assert.ok(/[а-я]/i.test(p.label), `${id}: ${p.label}`);
+  }
+  for (const s of ru.SCENARIOS) for (const e of s.evidenceInfo) assert.ok(/[а-я]/i.test(e.how) && e.need, s.id);
+});
+
+test("Kirill yozuvi havola, email va domenlarni o‘zgartirmaydi", () => {
+  assert.equal(toCyrillic("my.gov.uz orqali, info@bv.gov.uz"), "my.gov.uz орқали, info@bv.gov.uz");
+  assert.equal(toCyrillic("Toshkent sh., Nukus ko‘chasi 8"), "Тошкент ш., Нукус кўчаси 8");
 });

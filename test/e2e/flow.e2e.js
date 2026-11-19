@@ -57,7 +57,7 @@ test("Soha → holat → reja → ariza → DOCX va PDF", { skip }, async () => 
   assert.match(await p.innerText("#howtoH"), /Qanday topshiriladi/);
   await p.click("#seg button[data-r='court']");
   await p.waitForFunction(() => document.querySelector("#paper .ttl").textContent === "DA’VO ARIZASI");
-  assert.ok(await p.isVisible("a[href='https://my.sud.uz/']"));
+  assert.ok(await p.isVisible("#howtoLinks a[href='https://my.sud.uz/']"));
   for (const [btn, magic] of [["#dlDocx", "PK"], ["#dlPdf", "%PDF-"]]){
     const [dl] = await Promise.all([p.waitForEvent("download"), p.click(btn)]);
     const chunks = []; for await (const c of await dl.createReadStream()) chunks.push(c);
@@ -229,4 +229,87 @@ test("UX standartlari: 320px, teginish maydoni, xato bog‘lanishi, tasdiqlash, 
   await p.waitForSelector(".domain");
   assert.equal(await p.evaluate(() => localStorage.getItem("huquqyol:v2")), null);
   assert.deepEqual(p.errors, []);
+});
+
+test("Qayerga borish va dalillar: idora kartalari, qadamdan o‘tish, muhim dalillar, ariza qabul qiluvchisi", { skip }, async () => {
+  const p = await page();
+  await p.goto(base);
+  await p.click("[data-domain='migrant']");
+  await p.click("[data-case='migrant_xorij']");
+  await p.waitForSelector(".office");
+  assert.ok(await p.locator("#of-migration a[href='tel:1282']").count() === 1);
+  assert.ok(await p.locator("#evid li.must").count() >= 1);
+  assert.ok(await p.locator("#evid .evhow").count() === await p.locator("#evid li").count());
+  await p.locator(".ofjump").first().click();
+  await p.waitForFunction(() => document.activeElement?.id?.startsWith("of-"));
+  await p.click("#of-migration .ofabroad summary");
+  assert.ok(await p.isVisible("#of-migration a[href='tel:+79250454744']"));
+  assert.deepEqual(await audit(p), []);
+  await p.click(".cta [data-go='3']");
+  await p.waitForSelector("#paper .ttl");
+  await p.click("#seg button[data-r='consul']");
+  await p.waitForSelector("#howtoOffice .office");
+  assert.match(await p.innerText("#howtoOffice"), /konsullik/i);
+  assert.deepEqual(await audit(p), []);
+  assert.deepEqual(p.errors, []);
+});
+
+// Soxta nutq sintezatori: qaysi matn, qaysi ovoz va tezlikda o‘qilganini yozib boradi
+const fakeTTS = ({ uzVoice }) => {
+  const said = []; window.__said = said;
+  const voices = [{ name:"Russian voice", lang:"ru-RU", localService:true }, ...(uzVoice ? [{ name:"Uzbek voice", lang:"uz-UZ", localService:true }] : [])];
+  Object.defineProperty(window, "speechSynthesis", { value:{ paused:false, getVoices:() => voices, addEventListener(){},
+    speak(u){ said.push({ text:u.text, lang:u.lang, voice:u.voice?.name, rate:u.rate }); setTimeout(() => u.onstart?.(), 5); },
+    cancel(){}, pause(){ this.paused = true; }, resume(){ this.paused = false; } } });
+  window.SpeechSynthesisUtterance = function(t){ this.text = t; };
+};
+
+test("Qulaylik: shrift o‘lchami saqlanadi, sahifa va reja ovozda o‘qiladi, o‘zbekcha ovoz bo‘lmasa rus ovozi", { skip }, async () => {
+  const p = await page();
+  await p.context().addInitScript(fakeTTS, { uzVoice:true });
+  await p.goto(base);
+  await p.waitForSelector(".domain");
+  await p.click("#a11yBtn");
+  assert.equal(await p.getAttribute("#a11yBtn", "aria-expanded"), "true");
+  assert.deepEqual(await audit(p), []);
+  const before = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector(".lead")).fontSize));
+  await p.click(".fsopts [data-fs='3']");
+  const after = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector(".lead")).fontSize));
+  assert.ok(after / before > 1.45, `${before} → ${after}`);
+  assert.equal(await p.getAttribute(".fsopts [data-fs='3']", "aria-pressed"), "true");
+  await p.reload();
+  await p.waitForSelector(".domain");
+  assert.equal(await p.evaluate(() => document.documentElement.dataset.fs), "3");       // server cookie bo‘yicha chizdi
+  await p.click("[data-domain='mehnat']");
+  await p.click("[data-case='ish_haqi']");
+  await p.waitForSelector("#ttsPlan");
+  await p.click("#ttsPlan");
+  await p.waitForSelector("#ttsBar:not([hidden])");
+  const said = await p.evaluate(() => window.__said);
+  assert.equal(said[0].voice, "Uzbek voice");
+  assert.match(said.map(x => x.text).join(" "), /1-qadam/);
+  await p.waitForSelector(".tts-reading");                       // belgilash o‘qish boshlanganda (onstart) qo‘yiladi
+  assert.equal(await p.locator(".tts-reading").count(), 1);
+  assert.deepEqual(await audit(p), []);
+  await p.keyboard.press("Escape");
+  assert.equal(await p.isVisible("#ttsBar"), false);
+  await p.click(".cta [data-go='3']");
+  await p.waitForSelector("#paper .ttl");
+  assert.equal(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  assert.deepEqual(p.errors, []);
+
+  const q = await page({ viewport:{ width:375, height:740 } });
+  await q.context().addInitScript(fakeTTS, { uzVoice:false });
+  await q.goto(base);
+  await q.waitForSelector(".domain");
+  await q.click("#a11yBtn");
+  await q.click(".speed [data-rate='0.8']");
+  await q.click("#ttsPage");
+  await q.waitForSelector(".toast");
+  const s2 = await q.evaluate(() => window.__said);
+  assert.equal(s2[0].voice, "Russian voice");
+  assert.equal(s2[0].rate, 0.8);
+  assert.match(s2[0].text, /[а-я]/i);                 // rus ovozi uchun kirillga o‘girilgan
+  assert.match(await q.innerText(".toast"), /o‘zbekcha ovoz topilmadi/);
+  assert.deepEqual(q.errors, []);
 });

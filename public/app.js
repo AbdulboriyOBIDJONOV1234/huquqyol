@@ -2,6 +2,7 @@
 import { esc, ICONS, examples, domainCardsHTML, examplesHTML } from "/shared.js";
 import { makeT, normLang } from "/i18n.js";
 import { toCyrillic as toCyr } from "/translit.js";
+import { getFs, setFs, ttsSupported, speak, pause as ttsPauseToggle, stop as ttsStop, isSpeaking } from "/a11y.js";
 const $ = s => document.querySelector(s);
 const fmtSum = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 const iso = d => { const z = n => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; };
@@ -78,6 +79,7 @@ const fieldSpec = k => [...state.meta.applicant, ...(scenarioMeta(state.scn)?.fi
 /* ---------- Navigatsiya (brauzer "orqaga" tugmasi ishlaydi) ---------- */
 function go(n, { push = true } = {}){
   if (n > 1 && !state.plan) n = 1;
+  if (isSpeaking()) ttsStop();                              // boshqa sahifaga o‘tganda o‘qish to‘xtaydi
   [1,2,3].forEach(i => { $("#v" + i).hidden = i !== n; });
   $("#stepsNav").hidden = n === 1;                         // bosh sahifada qadamlar pastdagi «Qanday ishlaydi» qatorida
   document.querySelectorAll(".stepper button").forEach(b => {
@@ -222,7 +224,8 @@ function renderPlan(){
   $("#v2").innerHTML = `
     <button class="back" type="button" data-go="1">${t("otherSituation")}</button>
     <div class="case-head">
-      <div class="headmeta"><span class="tag">${esc(state.meta.domains.find(d => d.id === info.domain)?.title || "")} · ${esc(info.short)}</span><span class="small muted">${esc(source)}</span></div>
+      <div class="headmeta"><span class="tag">${esc(state.meta.domains.find(d => d.id === info.domain)?.title || "")} · ${esc(info.short)}</span><span class="small muted">${esc(source)}</span>
+        <button class="btn ghost sm ttsplan" id="ttsPlan" type="button" data-tts><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>${t("ttsListen")}</button></div>
       <h1>${esc(info.title)}</h1>
       <p>${esc(a.summary || info.lead)}</p>
       ${a.missing?.length ? `<p class="small warnline">${t("needForDoc")} ${a.missing.map(esc).join(", ")}</p>` : ""}
@@ -243,9 +246,12 @@ function renderPlan(){
     </div>
     <h2 class="sec">${t("whatToDo")}</h2>
     <ol class="steps" id="route"></ol>
+    ${p.offices?.length ? `<h2 class="sec" id="whereH">${t("whereH")}</h2>
+    <p class="small muted evhint">${t("whereHint")}</p>
+    <div class="offices">${p.offices.map(o => officeHTML(o, p.officesChecked)).join("")}</div>` : ""}
     <h2 class="sec">${t("evidenceH")} <span class="small muted evcount" id="evCount"></span></h2>
     <p class="small muted evhint">${t("evidenceHint")}</p>
-    <ul class="evid" id="evid">${p.evidence.map((e, i) => `<li><label><input type="checkbox" data-i="${i}" ${state.evidence.includes(i) ? "checked" : ""}> ${esc(e)}</label></li>`).join("")}</ul>
+    <ul class="evid" id="evid">${evidenceHTML(p)}</ul>
     <h2 class="sec">${t("lawSays")}</h2>
     <div class="laws">${p.norms.slice(0, 3).map(law).join("")}</div>
     ${p.norms.length > 3 ? `<details class="more"><summary>${t("moreNorms", { n: p.norms.length - 3 })}</summary><div class="laws">${p.norms.slice(3).map(law).join("")}</div></details>` : ""}
@@ -253,6 +259,8 @@ function renderPlan(){
     <div class="planextra"><button class="linkbtn" type="button" id="printPlan">${t("printPlan")}</button></div>
     <div class="cta"><span class="small muted ctahint">${t("nextHint")}</span><button class="btn primary" type="button" data-go="3">${t("makeDoc")}</button></div>`;
   $("#printPlan").addEventListener("click", printPlan);
+  $("#ttsPlan").addEventListener("click", () => readAloud(planItems()));
+  $("#route").addEventListener("click", e => { const b = e.target.closest("[data-of]"); if (b) jumpToOffice(b.dataset.of); });
   renderDeadline(); renderRoute(); renderCalc(); renderEvCount();
   $("#evid").addEventListener("change", e => {
     const i = Number(e.target.dataset.i); if (Number.isNaN(i)) return;
@@ -303,11 +311,49 @@ function renderDeadline(){
 }
 
 function renderRoute(){
+  const has = new Set((state.plan.offices || []).map(o => o.id));
   $("#route").innerHTML = state.plan.steps.map((st, i) => `
     <li><span class="num" aria-hidden="true">${i + 1}</span><div class="body">
       <div class="row"><div><div class="org">${esc(st.org)}</div><h3>${esc(st.t)}</h3></div>
       <span class="when ${st.hot ? "hot" : ""}">${esc(st.when)}</span></div>
-      <p>${esc(st.body)}</p></div></li>`).join("");
+      <p>${esc(st.body)}</p>
+      ${has.has(st.office) ? `<button class="linkbtn ofjump" type="button" data-of="${esc(st.office)}">${t("ofContact")} ↓</button>` : ""}</div></li>`).join("");
+}
+
+/* ---------- Idoralar: manzil va aloqa (rasmiy saytlardan) ---------- */
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const telHTML = p => `<a class="tel" href="tel:${esc(p.tel)}">${esc(p.text)}</a>`;
+const rowsHTML = list => (list || []).map(p => `<div><dt>${esc(p.label)}</dt><dd>${telHTML(p)}</dd></div>`).join("");
+const linkHTML = l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`;
+function officeHTML(o, checked, compact = false){
+  const links = [...(o.links || []), ...(o.local ? [o.local] : [])];
+  return `<article class="office${compact ? " compact" : ""}" ${compact ? "" : `id="of-${esc(o.id)}" tabindex="-1"`} aria-label="${esc(o.name)}">
+    <h3>${esc(o.name)}</h3>${o.parent ? `<div class="small muted ofparent">${esc(o.parent)}</div>` : ""}
+    ${compact ? "" : `<p class="small ofrole">${esc(o.role)}</p>`}
+    <dl class="ofmeta">
+      ${o.address ? `<div><dt>${t("ofAddress")}</dt><dd>${esc(o.address)}</dd></div>` : ""}
+      ${o.hours ? `<div><dt>${t("ofHours")}</dt><dd>${esc(o.hours)}</dd></div>` : ""}
+      ${rowsHTML(o.phones)}
+    </dl>
+    ${o.abroad?.length ? `<details class="more ofabroad"><summary>${t("ofAbroad")}</summary><dl class="ofmeta">${rowsHTML(o.abroad)}</dl></details>` : ""}
+    ${links.length ? `<div class="oflinks">${links.map(linkHTML).join("")}</div>` : ""}
+    <p class="ofsrc">${t("ofSource")} <a href="${esc(o.src)}" target="_blank" rel="noopener noreferrer">${esc(hostOf(o.src))}</a> · ${esc(t("ofChecked", { date: checked }))}</p>
+  </article>`;
+}
+function jumpToOffice(id){
+  const el = document.getElementById("of-" + id); if (!el) return;
+  el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
+  el.focus({ preventScroll:true });
+}
+
+/* ---------- Dalillar: ahamiyati va qayerdan olinadi ---------- */
+function evidenceHTML(p){
+  const info = i => p.evidenceInfo?.[i] || {};
+  const order = p.evidence.map((_, i) => i).sort((a, b) => (info(a).need === "m" ? 0 : 1) - (info(b).need === "m" ? 0 : 1) || a - b);   // muhimlari birinchi
+  return order.map(i => { const inf = info(i), must = inf.need === "m";
+    return `<li class="${must ? "must" : ""}"><label><input type="checkbox" data-i="${i}" ${state.evidence.includes(i) ? "checked" : ""} ${inf.how ? `aria-describedby="evh_${i}"` : ""}>
+      <span class="evtext"><span class="evname">${esc(p.evidence[i])}${must ? ` <span class="evneed" aria-hidden="true">${t("evMust")}</span><span class="sr">${t("evMustSr")}</span>` : ""}</span>
+      ${inf.how ? `<span class="evhow" id="evh_${i}">${esc(inf.how)}</span>` : ""}</span></label></li>`; }).join("");
 }
 
 function renderCalc(){
@@ -319,7 +365,97 @@ function renderCalc(){
   rows.hidden = !c.rows;
   rows.innerHTML = (c.rows || []).map(([a, b]) => `<div><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("");
 }
-function renderEvCount(){ $("#evCount").textContent = t("evCount", { a: state.evidence.length, b: state.plan.evidence.length }); }
+function renderEvCount(){
+  const inf = state.plan.evidenceInfo || [], must = inf.map((x, i) => x.need === "m" ? i : -1).filter(i => i >= 0);
+  $("#evCount").textContent = t("evCount", { a: state.evidence.length, b: state.plan.evidence.length })
+    + (must.length ? " " + t("evMustCount", { a: must.filter(i => state.evidence.includes(i)).length, b: must.length }) : "");
+}
+
+/* ---------- Qulaylik: shrift o‘lchami va ovozli o‘qish ---------- */
+const plain = el => el ? el.innerText.replace(/\s+/g, " ").trim() : "";
+const item = (el, text) => ({ el, text: text ?? plain(el) });
+function homeItems(){
+  return [$("#v1 h1"), $("#v1 .lead"), $("#pickTitle:not([hidden])"), $("#pickHead:not([hidden]) h2"), ...document.querySelectorAll("#cases .case")].filter(Boolean).map(el => item(el));
+}
+function planItems(){
+  const p = state.plan; if (!p) return [];
+  const out = [item($("#v2 h1")), item($("#v2 .case-head > p"))];
+  const days = p.deadline == null ? t("unlimited") : `${Math.abs(p.daysLeft)} ${t(p.daysLeft < 0 ? "daysLate" : "days", { n: Math.abs(p.daysLeft) })}. ${t("lastDay")} ${p.deadlineText}`;
+  out.push(item($("#deadlineCard"), `${p.deadlineLabel}: ${days}. ${p.risk.label}. ${p.risk.tip || ""}`));
+  if (p.calc && $("#calcCard")) out.push(item($("#calcCard"), `${p.calc.title}: ${p.calc.value}. ${p.calc.note || ""}`));
+  out.push(item($("#route")?.previousElementSibling, t("whatToDo")));
+  p.steps.forEach((st, i) => out.push(item($(`#route li:nth-child(${i + 1})`), `${t("ttsStep", { n: i + 1 })}. ${st.org}. ${st.t}. ${st.when}. ${st.body}`)));
+  const must = p.evidence.filter((_, i) => p.evidenceInfo?.[i]?.need === "m");
+  if (must.length) out.push(item($("#evid"), `${t("ttsMust")}: ${must.join(". ")}.`));
+  if (p.offices?.length){
+    out.push(item($("#whereH"), t("whereH")));
+    for (const o of p.offices) out.push(item(document.getElementById("of-" + o.id),
+      [o.name, o.role, o.address, ...(o.phones || []).map(x => `${x.label}: ${x.text}`)].filter(Boolean).join(". ")));
+  }
+  return out.filter(x => x.text);
+}
+function docItems(){
+  if (!state.blocks) return [];
+  const out = [item($("#missing"))];
+  for (const [i, b] of state.blocks.entries()){
+    const el = $("#paper").children[i];
+    const text = b.t === "addr" ? b.lines.map(partsText).join(". ") : b.t === "list" ? b.items.map((x, n) => `${n + 1}. ${partsText(x)}`).join(". ")
+      : b.t === "p" ? partsText(b.parts) : b.t === "sign" ? `${b.left} ${partsText(b.right)}` : b.text || "";
+    out.push(item(el, text.replace(/\[([^\]]+)\]/g, "$1")));
+  }
+  return out.filter(x => x.text);
+}
+function pageItems(){
+  const sel = String(window.getSelection?.() || "").replace(/\s+/g, " ").trim();
+  if (sel.length > 2) return [{ text: sel }];
+  const v = [1, 2, 3].find(i => !$("#v" + i).hidden) || 1;
+  return v === 2 ? planItems() : v === 3 ? docItems() : homeItems();
+}
+
+let ttsRate = 1, warnedRu = false;
+try { ttsRate = Number(localStorage.getItem("huquqyol:rate")) || 1; } catch {}
+function ttsUi(st){
+  const on = st === "playing" || st === "paused";
+  $("#ttsBar").hidden = !on;
+  document.body.classList.toggle("speaking", on);
+  $("#ttsState").textContent = t(st === "paused" ? "ttsPaused" : "ttsReading");
+  $("#ttsPause").textContent = t(st === "paused" ? "ttsResume" : "ttsPause");
+  document.querySelectorAll("[data-tts]").forEach(b => b.setAttribute("aria-pressed", String(on)));
+  if (st === "error") toast(t("ttsErr"));
+}
+async function readAloud(items){
+  if (!ttsSupported()){ toast(t("ttsNone")); return; }
+  if (isSpeaking()){ ttsStop(); return; }                  // ikkinchi bosish — to‘xtatish
+  const r = await speak(items, { lang: LANG === "ru" ? "ru" : "uz", rate: ttsRate, onState: ttsUi });
+  if (r.mode === "ru" && !warnedRu && LANG !== "ru"){ warnedRu = true; toast(t("ttsNoUz")); }
+}
+function syncA11y(){
+  const fs = getFs();
+  document.querySelectorAll(".fsopts [data-fs]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.fs) === fs)));
+  document.querySelectorAll(".speed [data-rate]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.rate) === ttsRate)));
+}
+function initA11y(){
+  const btn = $("#a11yBtn"), panel = $("#a11yPanel");
+  btn.addEventListener("click", () => { const open = panel.hidden; panel.hidden = !open; btn.setAttribute("aria-expanded", String(open)); if (open) panel.querySelector("[aria-pressed='true']")?.focus(); });
+  panel.addEventListener("click", e => {
+    const f = e.target.closest(".fsopts [data-fs]");
+    if (f){ const v = setFs(Number(f.dataset.fs)); syncA11y(); announce(t("fsDone", { v: t("fs" + v) })); return; }
+    const r = e.target.closest(".speed [data-rate]");
+    if (r){ ttsRate = Number(r.dataset.rate); try { localStorage.setItem("huquqyol:rate", String(ttsRate)); } catch {} syncA11y(); }
+  });
+  $("#ttsPage").addEventListener("click", () => readAloud(pageItems()));
+  $("#ttsDoc").addEventListener("click", () => readAloud(docItems()));
+  $("#ttsPause").addEventListener("click", ttsPauseToggle);
+  $("#ttsStopBtn").addEventListener("click", () => ttsStop());
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (isSpeaking()){ ttsStop(); return; }
+    if (!panel.hidden && !$("#dlg").open){ panel.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.focus(); }
+  });
+  if (!ttsSupported()){ $("#ttsNote").textContent = t("ttsNone"); $("#ttsPage").disabled = true; $("#ttsDoc").hidden = true; }
+  syncA11y();
+}
+initA11y();
 
 /* ---------- Kalendar eslatmasi (.ics) va rejani chop etish ---------- */
 const icsEsc = s => String(s).replace(/[\\;,]/g, m => "\\" + m).replace(/\r?\n/g, "\\n");
@@ -390,6 +526,9 @@ function renderHowto(){
   $("#howtoH").textContent = t("howtoFor", { label: LANG === "ru" ? d.label : d.label.toLowerCase() });
   $("#howtoSteps").innerHTML = h.steps.map(x => `<li>${esc(x)}</li>`).join("");
   $("#howtoLinks").innerHTML = h.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("");
+  const o = d.office && state.plan?.offices?.find(x => x.id === d.office);
+  $("#howtoOffice").hidden = !o;
+  $("#howtoOffice").innerHTML = o ? `<h3 class="ofwhere">${t("ofWhere")}</h3>${officeHTML(o, state.plan.officesChecked, true)}` : "";
 }
 function syncVisibility(){
   for (const f of scenarioMeta(state.scn).fields){ const el = document.querySelector(`[data-f="${f.k}"]`); if (el) el.hidden = !!(f.docs && !f.docs.includes(state.recipient)); }

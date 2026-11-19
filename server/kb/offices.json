@@ -1,0 +1,386 @@
+{
+ "checked": "2026-11-19",
+ "list": [
+  {
+   "id": "dmi",
+   "name": "Davlat mehnat inspeksiyasi",
+   "parent": "Kambag‘allikni qisqartirish va bandlik vazirligi",
+   "role": "Ish beruvchi mehnat qonunchiligini buzsa, tekshiradi va majburiy ko‘rsatma beradi.",
+   "address": "100100, Toshkent sh., Mirobod tumani, Nukus ko‘chasi, 8-uy (vazirlik)",
+   "hours": "Du–Ju 9:00–18:00, tushlik 13:00–14:00",
+   "phones": [
+    {
+     "label": "Vazirlik ishonch telefoni",
+     "text": "+998 71 200-06-00",
+     "tel": "+998712000600"
+    },
+    {
+     "label": "Vazirlik",
+     "text": "+998 71 203-01-30",
+     "tel": "+998712030130"
+    }
+   ],
+   "links": [
+    {
+     "label": "Davlat mehnat inspeksiyasi — dmi.mehnat.uz",
+     "url": "https://dmi.mehnat.uz/"
+    }
+   ],
+   "local": {
+    "label": "Hududiy bo‘linmalar ro‘yxati",
+    "url": "https://gov.uz/oz/bv/departments/regional"
+   },
+   "src": "https://gov.uz/oz/bv/contacts"
+  },
+  {
+   "id": "raqobat",
+   "name": "Raqobatni rivojlantirish va iste’molchilar huquqlarini himoya qilish qo‘mitasi",
+   "role": "Sotuvchi yoki xizmat ko‘rsatuvchi (kommunal xizmatlar ham) iste’molchi huquqlarini buzsa, tekshiradi.",
+   "address": "100128, Toshkent sh., Labzak ko‘chasi, 3-uy",
+   "hours": "Du–Ju 9:00–18:00",
+   "phones": [
+    {
+     "label": "Fuqarolar murojaatlari call-markazi",
+     "text": "+998 71 207-48-00 (ichki 1159)",
+     "tel": "+998712074800"
+    },
+    {
+     "label": "Yagona raqam",
+     "text": "+998 71 207-47-00",
+     "tel": "+998712074700"
+    }
+   ],
+   "links": [
+    {
+     "label": "Onlayn murojaat — raqobat.gov.uz",
+     "url": "https://raqobat.gov.uz/uz/xizmatlar/jismoniy-va-yuridik-shaxslarni-murojaatlari/"
+    }
+   ],
+   "src": "https://raqobat.gov.uz/"
+  },
+  {
+   "id": "cbu",
+   "name": "Markaziy bank — Bank xizmatlari iste’molchilari huquqlarini himoya qilish xizmati",
+   "role": "Bank, mikromoliya tashkiloti yoki lombard ustidan shikoyatlarni ko‘rib chiqadi.",
+   "address": "Toshkent sh., Islom Karimov ko‘chasi, 6-uy",
+   "phones": [
+    {
+     "label": "Ishonch telefoni",
+     "text": "+998 71 200-00-44",
+     "tel": "+998712000044"
+    }
+   ],
+   "links": [
+    {
+     "label": "Virtual qabulxona — cbu.uz",
+     "url": "https://cbu.uz/ru/services/online-reception/"
+    },
+    {
+     "label": "Yagona murojaatlar platformasi — murojaat.gov.uz",
+     "url": "https://murojaat.gov.uz/"
+    }
+   ],
+   "src": "https://cbu.uz/ru/consumer-protection/"
+  },
+  {
+   "id": "napp",
+   "name": "Istiqbolli loyihalar milliy agentligi (sug‘urta bozori nazorati)",
+   "role": "Sug‘urta kompaniyalari ustidan sug‘urta iste’molchilarining murojaatlarini ko‘rib chiqadi.",
+   "address": "100015, Toshkent sh., Mirobod tumani, Nukus ko‘chasi, 22-uy",
+   "hours": "Du–Ju 9:00–18:00",
+   "phones": [
+    {
+     "label": "Sug‘urta iste’molchilari murojaatlari",
+     "text": "+998 71 231-18-40",
+     "tel": "+998712311840"
+    },
+    {
+     "label": "Devonxona",
+     "text": "+998 71 231-79-09",
+     "tel": "+998712317909"
+    }
+   ],
+   "links": [
+    {
+     "label": "Onlayn murojaat — napp.uz",
+     "url": "https://napp.uz/appeal"
+    }
+   ],
+   "src": "https://napp.uz/contact"
+  },
+  {
+   "id": "migration",
+   "name": "Vazirlar Mahkamasi huzuridagi Migratsiya agentligi",
+   "role": "Xususiy bandlik agentliklarini litsenziyalaydi va nazorat qiladi, xorijda ishlayotgan fuqarolarga yordam beradi.",
+   "address": "Toshkent sh., Olmazor tumani, Qamarniso ko‘chasi, 1-uy",
+   "hours": "Du–Ju 9:00–18:00, tushlik 13:00–14:00",
+   "phones": [
+    {
+     "label": "Ishonch telefoni",
+     "text": "1282",
+     "tel": "1282"
+    },
+    {
+     "label": "Qabulxona",
+     "text": "+998 71 202-33-55 (ichki 757)",
+     "tel": "+998712023355"
+    }
+   ],
+   "abroad": [
+    {
+     "label": "Rossiya, Moskva",
+     "text": "+7 925 045-47-44",
+     "tel": "+79250454744"
+    },
+    {
+     "label": "Rossiya, Sankt-Peterburg",
+     "text": "+7 951 680-95-97",
+     "tel": "+79516809597"
+    },
+    {
+     "label": "Rossiya, Yekaterinburg",
+     "text": "+7 936 251-76-21",
+     "tel": "+79362517621"
+    },
+    {
+     "label": "Rossiya, Krasnodar",
+     "text": "+7 980 130-63-07",
+     "tel": "+79801306307"
+    },
+    {
+     "label": "Rossiya, Novosibirsk",
+     "text": "+7 932 327-00-04",
+     "tel": "+79323270004"
+    },
+    {
+     "label": "Rossiya, Samara",
+     "text": "+7 925 750-87-57",
+     "tel": "+79257508757"
+    },
+    {
+     "label": "Rossiya, Amur viloyati",
+     "text": "+7 925 657-67-18",
+     "tel": "+79256576718"
+    },
+    {
+     "label": "Koreya Respublikasi, Seul",
+     "text": "+82 2 2285 1341",
+     "tel": "+82222851341"
+    },
+    {
+     "label": "Turkiya, Istanbul (Telegram, WhatsApp)",
+     "text": "+90 553 541-17-17",
+     "tel": "+905535411717"
+    },
+    {
+     "label": "Turkiya, Anqara",
+     "text": "+90 312 441-17-46",
+     "tel": "+903124411746"
+    }
+   ],
+   "links": [
+    {
+     "label": "Agentlikning barcha raqamlari — gov.uz",
+     "url": "https://gov.uz/oz/migration/pages/agentlikning-barcha-raqamlari_"
+    }
+   ],
+   "src": "https://gov.uz/oz/migration/pages/agentlikning-barcha-raqamlari_"
+  },
+  {
+   "id": "pension",
+   "name": "Budjetdan tashqari Pensiya jamg‘armasi",
+   "parent": "Iqtisodiyot va moliya vazirligi huzurida",
+   "role": "Pensiya tayinlaydi va qayta hisoblaydi; arizalar tuman (shahar) bo‘limlari orqali ko‘riladi.",
+   "address": "100035, Toshkent sh., Yunusobod tumani, Niyozbek yo‘li ko‘chasi, 1-uy",
+   "hours": "Du–Ju 9:00–18:00, tushlik 13:00–14:00",
+   "phones": [
+    {
+     "label": "Ishonch telefoni",
+     "text": "12-71",
+     "tel": "1271"
+    },
+    {
+     "label": "Markaziy apparat",
+     "text": "+998 71 202-12-71",
+     "tel": "+998712021271"
+    }
+   ],
+   "local": {
+    "label": "Hududiy boshqarmalar manzillari",
+    "url": "https://gov.uz/oz/pj/departments/regional"
+   },
+   "src": "https://gov.uz/oz/pj/contacts"
+  },
+  {
+   "id": "social",
+   "name": "Prezident huzuridagi Ijtimoiy himoya milliy agentligi",
+   "role": "Bolalar nafaqasi, moddiy yordam va ijtimoiy reyestr. Arizalar my.gov.uz orqali beriladi; yashash joyingizdagi «Inson» ijtimoiy xizmatlar markaziga ham murojaat qilish mumkin.",
+   "phones": [
+    {
+     "label": "Call-markaz",
+     "text": "1140",
+     "tel": "1140"
+    }
+   ],
+   "links": [
+    {
+     "label": "Bolalar nafaqasi yoki moddiy yordam — my.gov.uz",
+     "url": "https://my.gov.uz/uz/service/1017"
+    },
+    {
+     "label": "Ijtimoiy reyestrga kiritish yoki chiqarish — my.gov.uz",
+     "url": "https://my.gov.uz/uz/service/587"
+    }
+   ],
+   "src": "https://my.gov.uz/uz/service/1017"
+  },
+  {
+   "id": "mib",
+   "name": "Bosh prokuratura huzuridagi Majburiy ijro byurosi",
+   "role": "Sud qarorlarini (qarz, aliment va boshqalar) majburiy ijro etadi.",
+   "address": "Toshkent sh., Yunusobod tumani, Xalqobod 3-tor ko‘chasi, 2A-uy",
+   "phones": [
+    {
+     "label": "Ishonch telefoni",
+     "text": "1107",
+     "tel": "1107"
+    },
+    {
+     "label": "Ishonch telefoni (shahar raqami)",
+     "text": "+998 71 231-11-07",
+     "tel": "+998712311107"
+    },
+    {
+     "label": "Devonxona",
+     "text": "+998 71 207-11-73",
+     "tel": "+998712071173"
+    }
+   ],
+   "links": [
+    {
+     "label": "Rasmiy sayt — mib.uz",
+     "url": "https://mib.uz/"
+    },
+    {
+     "label": "Ijro hujjati va aliment bo‘yicha qarzdorlikni tekshirish — my.gov.uz",
+     "url": "https://my.gov.uz/uz/service/319"
+    }
+   ],
+   "src": "https://mib.uz/contact"
+  },
+  {
+   "id": "courts",
+   "name": "Sudlar",
+   "role": "Da’vo va shikoyatlar tegishli tuman (tumanlararo) sudiga beriladi. Arizani elektron shaklda ham topshirish mumkin.",
+   "links": [
+    {
+     "label": "Sudga elektron murojaat — cabinet.sud.uz",
+     "url": "https://cabinet.sud.uz/sign-in"
+    },
+    {
+     "label": "Interaktiv xizmatlar — my.sud.uz",
+     "url": "https://my.sud.uz/"
+    }
+   ],
+   "local": {
+    "label": "Sudlar ro‘yxati va manzillari — sud.uz",
+    "url": "https://sud.uz/"
+   },
+   "src": "https://sud.uz/"
+  },
+  {
+   "id": "iiv",
+   "name": "Ichki ishlar organlari (politsiya)",
+   "role": "Firibgarlik, tahdid yoki o‘zboshimchalik haqida ariza qabul qiladi. 1102 — ichki ishlar xodimlari ustidan shikoyatlar uchun.",
+   "phones": [
+    {
+     "label": "Call-markaz",
+     "text": "102",
+     "tel": "102"
+    },
+    {
+     "label": "Ishonch telefoni, 24/7",
+     "text": "1102",
+     "tel": "1102"
+    }
+   ],
+   "links": [
+    {
+     "label": "Murojaat qilish tartibi — gov.uz",
+     "url": "https://gov.uz/oz/iiv/pages/murojaat-qilish-tartibi"
+    }
+   ],
+   "src": "https://gov.uz/oz/iiv/pages/ishonch-telefoni-reglamenti"
+  },
+  {
+   "id": "egov",
+   "name": "Yagona interaktiv davlat xizmatlari portali (my.gov.uz)",
+   "role": "YHXX jarimasiga elektron shikoyat va boshqa davlat xizmatlari.",
+   "address": "100164, Toshkent sh., Ibrohim Mo‘minov ko‘chasi, 4-uy",
+   "hours": "Call-markaz 24/7",
+   "phones": [
+    {
+     "label": "Call-markaz (24/7)",
+     "text": "1242",
+     "tel": "1242"
+    },
+    {
+     "label": "Shikoyat va takliflar",
+     "text": "1148",
+     "tel": "1148"
+    }
+   ],
+   "links": [
+    {
+     "label": "YHXX jarimasiga elektron shikoyat — my.gov.uz",
+     "url": "https://my.gov.uz/oz/service/1054"
+    }
+   ],
+   "src": "https://my.gov.uz/uz/contact"
+  },
+  {
+   "id": "pm",
+   "name": "Prezidentning virtual qabulxonasi",
+   "role": "Idora javob bermasa yoki masala hal bo‘lmasa, murojaat yuborish mumkin.",
+   "phones": [
+    {
+     "label": "Qisqa raqam",
+     "text": "1000",
+     "tel": "1000"
+    },
+    {
+     "label": "Bepul raqam",
+     "text": "0-800-210-00-00",
+     "tel": "080021000000"
+    }
+   ],
+   "links": [
+    {
+     "label": "Murojaat yuborish — pm.gov.uz",
+     "url": "https://pm.gov.uz/"
+    },
+    {
+     "label": "Yagona murojaatlar platformasi — murojaat.gov.uz",
+     "url": "https://murojaat.gov.uz/"
+    }
+   ],
+   "src": "https://pm.gov.uz/"
+  },
+  {
+   "id": "mfa",
+   "name": "O‘zbekistonning xorijdagi elchixona va konsulliklari",
+   "role": "Xorijda pasport yo‘qolsa yoki olib qo‘yilsa, konsullik yordami va qaytish hujjati. Aloqa ma’lumotlari davlatga qarab farq qiladi.",
+   "links": [
+    {
+     "label": "Konsulliklar ro‘yxati va aloqa — Tashqi ishlar vazirligi",
+     "url": "https://gov.uz/oz/mfa/pages/o-zbekiston-respublikasining-xorijdagi-diplomatik-vakolatxonalari-va-konsullik-muassasalari-konsullik-okruglari-to-g-risida"
+    },
+    {
+     "label": "Konsullikka elektron navbat — e-navbat.mfa.uz",
+     "url": "https://e-navbat.mfa.uz/"
+    }
+   ],
+   "src": "https://gov.uz/oz/mfa/pages/o-zbekiston-respublikasining-xorijdagi-diplomatik-vakolatxonalari-va-konsullik-muassasalari-konsullik-okruglari-to-g-risida"
+  }
+ ]
+}

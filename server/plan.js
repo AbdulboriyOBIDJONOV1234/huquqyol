@@ -131,7 +131,7 @@ const whenText = (w, { trigger, deadline, lang }) => w
 // lang: "uz" | "ru" (kirill yozuvi chiqishda o‘giriladi)
 export function buildPlan({ scenario, triggerDate, form = {}, today = new Date(), lang = "uz" }){
   lang = lang === "ru" ? "ru" : "uz";
-  const { SCENARIO_BY_ID, NORM_BY_ID } = kbFor(lang);
+  const { SCENARIO_BY_ID, NORM_BY_ID, OFFICES, OFFICES_CHECKED } = kbFor(lang);
   const s = SCENARIO_BY_ID[scenario];
   if (!s) throw Object.assign(new Error("Noma’lum holat."), { status: 400 });
   const now = startOfDay(today);
@@ -151,6 +151,9 @@ export function buildPlan({ scenario, triggerDate, form = {}, today = new Date()
     steps: s.steps.map(st => ({ ...st, when: whenText(st.when, { trigger, deadline, lang }) })),
     norms: s.norms.map(id => NORM_BY_ID[id]),
     evidence: s.evidence,
+    evidenceInfo: s.evidenceInfo || [],
+    offices: (s.offices || []).map(id => OFFICES[id]).filter(Boolean),
+    officesChecked: OFFICES_CHECKED ? fmtDate(parseISO(OFFICES_CHECKED), lang) : "",
     calc: s.calc ? CALCS[s.calc.type]({ form, trigger, today: now, lang }) : null
   };
 }

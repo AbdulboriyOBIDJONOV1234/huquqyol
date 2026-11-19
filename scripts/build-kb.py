@@ -982,7 +982,25 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import kb_ru
 for s_ in S: s_["keywords"] = s_["keywords"] + [k for k in kb_ru.KEYWORDS[s_["id"]] if k not in s_["keywords"]]
 RU = kb_ru.build_ru(S, howto_kind, fee_key)
+# Dalillar yo‘riqnomasi va idoralar (ikki tilda bitta manbadan)
+import kb_evidence, kb_offices
+for s_ in S:
+    ev = kb_evidence.EVID[s_["id"]]
+    assert len(ev) == len(s_["evidence"]), ("evidenceInfo", s_["id"])
+    assert all(n in ("m", "f") for n, _, _ in ev)
+    s_["evidenceInfo"] = [{"need": n, "how": uz} for n, uz, _ in ev]
+    RU["scenarios"][s_["id"]]["evidenceInfo"] = [{"how": ru} for _, _, ru in ev]
+kb_offices.attach(S)
+OFFICES = [{"id": k, **v} for k, v in kb_offices.OFFICES.items()]
+assert set(kb_offices.OFFICES_RU) == set(kb_offices.OFFICES)
+for k, r in kb_offices.OFFICES_RU.items():
+    u = kb_offices.OFFICES[k]
+    for key in ("phones", "abroad", "links"):
+        assert len(r.get(key, [])) == len(u.get(key, [])), (k, key)
+    assert set(r) <= set(u), (k, set(r) - set(u))
+RU["offices"] = kb_offices.OFFICES_RU
+RU["officesChecked"] = kb_offices.CHECKED
 assert set(RU["norms"]) == ids and set(RU["laws"]) == set(LAWS)
-for name, data in (("ru", RU), ("laws", LAWS), ("domains", DOMAINS), ("norms", N), ("scenarios", S), ("applicant", APPLICANT)):
+for name, data in (("ru", RU), ("laws", LAWS), ("domains", DOMAINS), ("norms", N), ("scenarios", S), ("applicant", APPLICANT), ("offices", {"checked": kb_offices.CHECKED, "list": OFFICES})):
     with open(os.path.join(OUT, name + ".json"), "w", encoding="utf-8") as f: json.dump(data, f, ensure_ascii=False, indent=1)
 print(len(N), "norma;", len(S), "holat;", len(DOMAINS), "soha")

@@ -243,9 +243,12 @@ function renderPlan(){
     </div>
     <h2 class="sec">${t("whatToDo")}</h2>
     <ol class="steps" id="route"></ol>
+    ${p.offices?.length ? `<h2 class="sec" id="whereH">${t("whereH")}</h2>
+    <p class="small muted evhint">${t("whereHint")}</p>
+    <div class="offices">${p.offices.map(o => officeHTML(o, p.officesChecked)).join("")}</div>` : ""}
     <h2 class="sec">${t("evidenceH")} <span class="small muted evcount" id="evCount"></span></h2>
     <p class="small muted evhint">${t("evidenceHint")}</p>
-    <ul class="evid" id="evid">${p.evidence.map((e, i) => `<li><label><input type="checkbox" data-i="${i}" ${state.evidence.includes(i) ? "checked" : ""}> ${esc(e)}</label></li>`).join("")}</ul>
+    <ul class="evid" id="evid">${evidenceHTML(p)}</ul>
     <h2 class="sec">${t("lawSays")}</h2>
     <div class="laws">${p.norms.slice(0, 3).map(law).join("")}</div>
     ${p.norms.length > 3 ? `<details class="more"><summary>${t("moreNorms", { n: p.norms.length - 3 })}</summary><div class="laws">${p.norms.slice(3).map(law).join("")}</div></details>` : ""}
@@ -253,6 +256,7 @@ function renderPlan(){
     <div class="planextra"><button class="linkbtn" type="button" id="printPlan">${t("printPlan")}</button></div>
     <div class="cta"><span class="small muted ctahint">${t("nextHint")}</span><button class="btn primary" type="button" data-go="3">${t("makeDoc")}</button></div>`;
   $("#printPlan").addEventListener("click", printPlan);
+  $("#route").addEventListener("click", e => { const b = e.target.closest("[data-of]"); if (b) jumpToOffice(b.dataset.of); });
   renderDeadline(); renderRoute(); renderCalc(); renderEvCount();
   $("#evid").addEventListener("change", e => {
     const i = Number(e.target.dataset.i); if (Number.isNaN(i)) return;
@@ -303,11 +307,49 @@ function renderDeadline(){
 }
 
 function renderRoute(){
+  const has = new Set((state.plan.offices || []).map(o => o.id));
   $("#route").innerHTML = state.plan.steps.map((st, i) => `
     <li><span class="num" aria-hidden="true">${i + 1}</span><div class="body">
       <div class="row"><div><div class="org">${esc(st.org)}</div><h3>${esc(st.t)}</h3></div>
       <span class="when ${st.hot ? "hot" : ""}">${esc(st.when)}</span></div>
-      <p>${esc(st.body)}</p></div></li>`).join("");
+      <p>${esc(st.body)}</p>
+      ${has.has(st.office) ? `<button class="linkbtn ofjump" type="button" data-of="${esc(st.office)}">${t("ofContact")} ↓</button>` : ""}</div></li>`).join("");
+}
+
+/* ---------- Idoralar: manzil va aloqa (rasmiy saytlardan) ---------- */
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; } };
+const telHTML = p => `<a class="tel" href="tel:${esc(p.tel)}">${esc(p.text)}</a>`;
+const rowsHTML = list => (list || []).map(p => `<div><dt>${esc(p.label)}</dt><dd>${telHTML(p)}</dd></div>`).join("");
+const linkHTML = l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`;
+function officeHTML(o, checked, compact = false){
+  const links = [...(o.links || []), ...(o.local ? [o.local] : [])];
+  return `<article class="office${compact ? " compact" : ""}" ${compact ? "" : `id="of-${esc(o.id)}" tabindex="-1"`} aria-label="${esc(o.name)}">
+    <h3>${esc(o.name)}</h3>${o.parent ? `<div class="small muted ofparent">${esc(o.parent)}</div>` : ""}
+    ${compact ? "" : `<p class="small ofrole">${esc(o.role)}</p>`}
+    <dl class="ofmeta">
+      ${o.address ? `<div><dt>${t("ofAddress")}</dt><dd>${esc(o.address)}</dd></div>` : ""}
+      ${o.hours ? `<div><dt>${t("ofHours")}</dt><dd>${esc(o.hours)}</dd></div>` : ""}
+      ${rowsHTML(o.phones)}
+    </dl>
+    ${o.abroad?.length ? `<details class="more ofabroad"><summary>${t("ofAbroad")}</summary><dl class="ofmeta">${rowsHTML(o.abroad)}</dl></details>` : ""}
+    ${links.length ? `<div class="oflinks">${links.map(linkHTML).join("")}</div>` : ""}
+    <p class="ofsrc">${t("ofSource")} <a href="${esc(o.src)}" target="_blank" rel="noopener noreferrer">${esc(hostOf(o.src))}</a> · ${esc(t("ofChecked", { date: checked }))}</p>
+  </article>`;
+}
+function jumpToOffice(id){
+  const el = document.getElementById("of-" + id); if (!el) return;
+  el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start" });
+  el.focus({ preventScroll:true });
+}
+
+/* ---------- Dalillar: ahamiyati va qayerdan olinadi ---------- */
+function evidenceHTML(p){
+  const info = i => p.evidenceInfo?.[i] || {};
+  const order = p.evidence.map((_, i) => i).sort((a, b) => (info(a).need === "m" ? 0 : 1) - (info(b).need === "m" ? 0 : 1) || a - b);   // muhimlari birinchi
+  return order.map(i => { const inf = info(i), must = inf.need === "m";
+    return `<li class="${must ? "must" : ""}"><label><input type="checkbox" data-i="${i}" ${state.evidence.includes(i) ? "checked" : ""} ${inf.how ? `aria-describedby="evh_${i}"` : ""}>
+      <span class="evtext"><span class="evname">${esc(p.evidence[i])}${must ? ` <span class="evneed" aria-hidden="true">${t("evMust")}</span><span class="sr">${t("evMustSr")}</span>` : ""}</span>
+      ${inf.how ? `<span class="evhow" id="evh_${i}">${esc(inf.how)}</span>` : ""}</span></label></li>`; }).join("");
 }
 
 function renderCalc(){
@@ -319,7 +361,11 @@ function renderCalc(){
   rows.hidden = !c.rows;
   rows.innerHTML = (c.rows || []).map(([a, b]) => `<div><span>${esc(a)}</span><b>${esc(b)}</b></div>`).join("");
 }
-function renderEvCount(){ $("#evCount").textContent = t("evCount", { a: state.evidence.length, b: state.plan.evidence.length }); }
+function renderEvCount(){
+  const inf = state.plan.evidenceInfo || [], must = inf.map((x, i) => x.need === "m" ? i : -1).filter(i => i >= 0);
+  $("#evCount").textContent = t("evCount", { a: state.evidence.length, b: state.plan.evidence.length })
+    + (must.length ? " " + t("evMustCount", { a: must.filter(i => state.evidence.includes(i)).length, b: must.length }) : "");
+}
 
 /* ---------- Kalendar eslatmasi (.ics) va rejani chop etish ---------- */
 const icsEsc = s => String(s).replace(/[\\;,]/g, m => "\\" + m).replace(/\r?\n/g, "\\n");
@@ -390,6 +436,9 @@ function renderHowto(){
   $("#howtoH").textContent = t("howtoFor", { label: LANG === "ru" ? d.label : d.label.toLowerCase() });
   $("#howtoSteps").innerHTML = h.steps.map(x => `<li>${esc(x)}</li>`).join("");
   $("#howtoLinks").innerHTML = h.links.map(l => `<a href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("");
+  const o = d.office && state.plan?.offices?.find(x => x.id === d.office);
+  $("#howtoOffice").hidden = !o;
+  $("#howtoOffice").innerHTML = o ? `<h3 class="ofwhere">${t("ofWhere")}</h3>${officeHTML(o, state.plan.officesChecked, true)}` : "";
 }
 function syncVisibility(){
   for (const f of scenarioMeta(state.scn).fields){ const el = document.querySelector(`[data-f="${f.k}"]`); if (el) el.hidden = !!(f.docs && !f.docs.includes(state.recipient)); }

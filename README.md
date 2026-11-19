@@ -33,8 +33,8 @@ Node.js 18.18 yoki undan yangi versiya kerak (tavsiya: 20 yoki 22).
 npm install
 cp .env.example .env      # ANTHROPIC_API_KEY ni yozing (ixtiyoriy)
 npm start                 # http://localhost:3000
-npm test                  # 50 ta unit/API test (jumladan ruscha va kirillcha)
-npm run test:e2e          # 7 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
+npm test                  # 54 ta unit/API test (jumladan ruscha va kirillcha)
+npm run test:e2e          # 8 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
 ```
 
 API kaliti bo‘lmasa ham ilova to‘liq ishlaydi. Bu holda tahlilni BM25 qidiruvi va kalit so‘zlar bajaradi. Kalit qo‘shilsa, tahlilni Claude bajaradi. Claude faqat qidiruv topgan normalarga tayanadi va bazada yo‘q modda raqamlari javobdan avtomatik olib tashlanadi.
@@ -104,6 +104,8 @@ Lighthouse (production rejim): **Performance 100, Accessibility 100, Best Practi
 - Rejada «Ariza tayyorlash» tugmasi doim ko‘rinib turadi. Muddat hisoblanadigan sana yonida uni tekshirish eslatmasi bor.
 - To‘ldirilmagan joylar hisoblab ko‘rsatiladi, to‘ldirish chizig‘i bilan. Bossangiz, kerakli maydonga olib boradi. Majburiy maydonlar `*` bilan belgilanadi.
 - Ariza Word yoki PDF qilib yuklab olinadi, brauzerdan chop etiladi yoki matn sifatida nusxalanadi.
+- **Dalillar ro‘yxati** har bir holat uchun: har bir hujjat yoki dalil «muhim» yoki «foydali» deb belgilangan va qayerdan olinishi yozilgan (`scripts/kb_evidence.py`). Muhimlari birinchi turadi, hisoblagich ikkalasini ko‘rsatadi; belgilanganlari arizaning «Ilovalar» ro‘yxatiga tushadi.
+- **«Qayerga murojaat qilish»** — holatga tegishli idoralar kartalari: manzil, ish vaqti, bosiladigan telefonlar, onlayn murojaat va hududiy bo‘limlar havolasi, migrantlar uchun xorijdagi vakolatxonalar raqamlari. Rejadagi har bir qadamdan tegishli kartaga o‘tish mumkin; ariza sahifasida qabul qiluvchi idoraning aloqasi ko‘rsatiladi. Har bir kartada rasmiy manba va tekshirilgan sana bor (`scripts/kb_offices.py`).
 - **«Qanday topshiriladi» yo‘riqnomasi** har bir qabul qiluvchi uchun alohida: qabul belgisi, buyurtma xat, elektron yo‘llar (sudlar uchun my.sud.uz, davlat idoralari uchun Prezidentning virtual qabulxonasi, YHXX jarimalari uchun my.gov.uz), davlat boji.
 - Klaviatura bilan to‘liq boshqariladi, ekran o‘quvchi uchun e’lonlar (`aria-live`) bor, harakatni kamaytirish sozlamasi hurmat qilinadi.
 - Qorong‘i va yorug‘ mavzu tizim sozlamasiga qarab avtomatik tanlanadi. Mobil qurilmada yuklab olish tugmalari ekran pastida turadi.
@@ -117,6 +119,12 @@ Lighthouse (production rejim): **Performance 100, Accessibility 100, Best Practi
 1. https://lex.uz/acts/-6257288 sahifasini brauzerda oching va **Sahifani saqlash** (HTML) orqali saqlang.
 2. `npm run ingest -- mehnat-kodeksi.html` buyrug‘ini ishga tushiring. Natijada `server/kb/lex-articles.json` (barcha moddalar) yaratiladi.
 3. Serverni qayta ishga tushiring. Endi qidiruv moddalarning asl matnidan ham parcha topib, Claude’ga beradi.
+
+### Idoralar ma’lumotini yangilash
+
+`scripts/kb_offices.py` dagi har bir qiymat faqat idoraning o‘z rasmiy sahifasidan olinadi va `src` da shu sahifa ko‘rsatiladi; tasdiqlab bo‘lmagan maydon bo‘sh qoldiriladi. Raqamlarni yangilaganda `CHECKED` sanasini o‘zgartiring va `npm run kb` ni ishga tushiring. Test manbalar rasmiy domenlarda (gov.uz, cbu.uz, napp.uz, mib.uz, sud.uz, mehnat.uz, mfa.uz) ekanini va telefonlar to‘g‘ri formatda ekanini tekshiradi.
+
+2026-yil 19-noyabrda tekshirilgan manbalar: gov.uz/oz/bv/contacts (Bandlik vazirligi, mehnat inspeksiyasi), raqobat.gov.uz, cbu.uz/ru/consumer-protection, napp.uz/contact, gov.uz/oz/migration (Migratsiya agentligi), gov.uz/oz/pj/contacts (Pensiya jamg‘armasi), my.gov.uz/uz/service/1017 (Ijtimoiy himoya milliy agentligi), mib.uz/contact, sud.uz, gov.uz/oz/iiv, my.gov.uz/uz/contact, pm.gov.uz, gov.uz/oz/mfa. Ijtimoiy himoya milliy agentligining markaziy manzili rasmiy aloqa sahifasida topilmagani uchun ko‘rsatilmagan; Raqobat qo‘mitasi va sudlarning hududiy manzillari ham ularning saytidagi ro‘yxatga havola orqali beriladi.
 
 ### Yangi soha yoki holat qo‘shish
 

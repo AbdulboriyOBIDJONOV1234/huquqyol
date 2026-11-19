@@ -57,7 +57,7 @@ test("Soha → holat → reja → ariza → DOCX va PDF", { skip }, async () => 
   assert.match(await p.innerText("#howtoH"), /Qanday topshiriladi/);
   await p.click("#seg button[data-r='court']");
   await p.waitForFunction(() => document.querySelector("#paper .ttl").textContent === "DA’VO ARIZASI");
-  assert.ok(await p.isVisible("a[href='https://my.sud.uz/']"));
+  assert.ok(await p.isVisible("#howtoLinks a[href='https://my.sud.uz/']"));
   for (const [btn, magic] of [["#dlDocx", "PK"], ["#dlPdf", "%PDF-"]]){
     const [dl] = await Promise.all([p.waitForEvent("download"), p.click(btn)]);
     const chunks = []; for await (const c of await dl.createReadStream()) chunks.push(c);
@@ -228,5 +228,28 @@ test("UX standartlari: 320px, teginish maydoni, xato bog‘lanishi, tasdiqlash, 
   await Promise.all([p.waitForNavigation(), p.click("#dlgOk")]);
   await p.waitForSelector(".domain");
   assert.equal(await p.evaluate(() => localStorage.getItem("huquqyol:v2")), null);
+  assert.deepEqual(p.errors, []);
+});
+
+test("Qayerga borish va dalillar: idora kartalari, qadamdan o‘tish, muhim dalillar, ariza qabul qiluvchisi", { skip }, async () => {
+  const p = await page();
+  await p.goto(base);
+  await p.click("[data-domain='migrant']");
+  await p.click("[data-case='migrant_xorij']");
+  await p.waitForSelector(".office");
+  assert.ok(await p.locator("#of-migration a[href='tel:1282']").count() === 1);
+  assert.ok(await p.locator("#evid li.must").count() >= 1);
+  assert.ok(await p.locator("#evid .evhow").count() === await p.locator("#evid li").count());
+  await p.locator(".ofjump").first().click();
+  await p.waitForFunction(() => document.activeElement?.id?.startsWith("of-"));
+  await p.click("#of-migration .ofabroad summary");
+  assert.ok(await p.isVisible("#of-migration a[href='tel:+79250454744']"));
+  assert.deepEqual(await audit(p), []);
+  await p.click(".cta [data-go='3']");
+  await p.waitForSelector("#paper .ttl");
+  await p.click("#seg button[data-r='consul']");
+  await p.waitForSelector("#howtoOffice .office");
+  assert.match(await p.innerText("#howtoOffice"), /konsullik/i);
+  assert.deepEqual(await audit(p), []);
   assert.deepEqual(p.errors, []);
 });

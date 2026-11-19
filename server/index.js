@@ -50,7 +50,7 @@ function metaOf(lang){
     laws: Object.fromEntries(Object.entries(LAWS).map(([k, l]) => [k, { name:l.name, url:l.url }])),
     scenarios: SCENARIOS.map(s => ({
       id:s.id, domain:s.domain, title:s.title, card:s.card, short:s.short, trigger:s.trigger,
-      docs: s.docs.map(d => ({ id:d.id, label:d.label, howto:d.howto })), fields: s.fields, calc: s.calc?.type || null, deadline: s.deadline
+      docs: s.docs.map(d => ({ id:d.id, label:d.label, howto:d.howto, office:d.office || null })), fields: s.fields, calc: s.calc?.type || null, deadline: s.deadline
     }))
   });
 }

@@ -52,14 +52,16 @@
     "org": "Mehnat inspeksiyasi",
     "t": "Javob bo‘lmasa, ariza yozing",
     "when": "1–2 hafta ichida",
-    "body": "Inspektor tekshiradi va ish beruvchiga majburiy ko‘rsatma beradi."
+    "body": "Inspektor tekshiradi va ish beruvchiga majburiy ko‘rsatma beradi.",
+    "office": "dmi"
    },
    {
     "org": "Sud",
     "t": "Qarz va kompensatsiyani undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Xodim sud xarajatlaridan ozod."
+    "body": "Fuqarolik sudiga da’vo. Xodim sud xarajatlaridan ozod.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -211,7 +213,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "dmi"
    },
    {
     "id": "court",
@@ -254,8 +257,39 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Ish joyingizdagi kadrlar bo‘limidan nusxasini so‘rang; o‘zingizdagi nusxa ham bo‘ladi."
+   },
+   {
+    "need": "m",
+    "how": "Bank ilovasidan yoki filialdan ko‘chirma oling: oxirgi maosh qachon tushgani ko‘rinadi."
+   },
+   {
+    "need": "f",
+    "how": "Buxgalteriyadan yozma so‘rang; bermasalar, talabnomada buni ham talab qiling."
+   },
+   {
+    "need": "f",
+    "how": "Telegram, SMS va e-mail yozishmalarini skrinshot qilib, sanasi bilan saqlang."
+   },
+   {
+    "need": "m",
+    "how": "Ikkinchi nusxaga qabul qilgan shaxsning imzosi va sanasini qo‘ydiring yoki pochta kvitansiyasini saqlang."
+   },
+   {
+    "need": "f",
+    "how": "Xuddi shu ahvoldagi hamkasblarning ismi va telefonini yozib qo‘ying."
+   }
+  ],
+  "offices": [
+   "dmi",
+   "courts"
   ]
  },
  {
@@ -310,13 +344,15 @@
     "t": "Ishga tiklash da’vosini bering",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Bevosita sudga. Majburiy progul haqi va ma’naviy zararni ham so‘rang."
+    "body": "Bevosita sudga. Majburiy progul haqi va ma’naviy zararni ham so‘rang.",
+    "office": "courts"
    },
    {
     "org": "Mehnat inspeksiyasi",
     "t": "Parallel ariza yozing",
     "when": "Sud bilan birga",
-    "body": "Inspeksiya xulosasi sudda dalil bo‘ladi, lekin sud muddatini to‘xtatmaydi."
+    "body": "Inspeksiya xulosasi sudda dalil bo‘ladi, lekin sud muddatini to‘xtatmaydi.",
+    "office": "dmi"
    }
   ],
   "evidence": [
@@ -419,7 +455,8 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    },
    {
     "id": "inspection",
@@ -457,8 +494,39 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "dmi"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Ish beruvchi bo‘shatish kuni berishi shart; olgan sanangizni yozib qo‘ying — muddat shundan hisoblanadi."
+   },
+   {
+    "need": "m",
+    "how": "O‘zingizdagi nusxa yoki kadrlar bo‘limidan nusxa."
+   },
+   {
+    "need": "m",
+    "how": "Ogohlantirish berilgan bo‘lsa — nusxasi; berilmagan bo‘lsa, buni arizada ko‘rsating."
+   },
+   {
+    "need": "f",
+    "how": "Elektron mehnat daftarchasi ko‘chirmasini my.gov.uz orqali olish mumkin."
+   },
+   {
+    "need": "f",
+    "how": "Bo‘shatish haqidagi xabarlar, buyruqlar, ish beruvchining yozuvlari."
+   },
+   {
+    "need": "f",
+    "how": "Bo‘shatish qanday bo‘lganini ko‘rgan hamkasblar."
+   }
+  ],
+  "offices": [
+   "courts",
+   "dmi"
   ]
  },
  {
@@ -500,14 +568,16 @@
     "org": "Mehnat inspeksiyasi",
     "t": "Rad etilsa, ariza yozing",
     "when": "Rad javobidan keyin",
-    "body": "Inspektor ish beruvchiga ta’til berish yuzasidan ko‘rsatma beradi."
+    "body": "Inspektor ish beruvchiga ta’til berish yuzasidan ko‘rsatma beradi.",
+    "office": "dmi"
    },
    {
     "org": "Sud",
     "t": "Ta’til yoki kompensatsiyani talab qiling",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Sud xarajati to‘lanmaydi."
+    "body": "Fuqarolik sudiga da’vo. Sud xarajati to‘lanmaydi.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -637,8 +707,35 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "dmi"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "O‘zingizdagi nusxa yoki kadrlar bo‘limidan."
+   },
+   {
+    "need": "m",
+    "how": "Arizani 2 nusxada bering, ikkinchisiga qabul belgisini qo‘ydiring."
+   },
+   {
+    "need": "m",
+    "how": "Rad javobini yozma so‘rang; og‘zaki bo‘lsa, yozishma yoki guvohni saqlang."
+   },
+   {
+    "need": "f",
+    "how": "Ish beruvchi grafikni tasdiqlaydi; nusxasini talab qiling."
+   },
+   {
+    "need": "f",
+    "how": "Qo‘shimcha ta’til (staj uchun) so‘rasangiz kerak: mehnat daftarchasi yoki ma’lumotnoma."
+   }
+  ],
+  "offices": [
+   "dmi",
+   "courts"
   ]
  },
  {
@@ -692,14 +789,16 @@
     "org": "Mehnat inspeksiyasi",
     "t": "To‘lanmasa, ariza yozing",
     "when": "3 kundan keyin",
-    "body": "Daftarcha berilmagani ham alohida qoidabuzarlik sifatida ko‘riladi."
+    "body": "Daftarcha berilmagani ham alohida qoidabuzarlik sifatida ko‘riladi.",
+    "office": "dmi"
    },
    {
     "org": "Sud",
     "t": "Summa va kompensatsiyani undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Xodim sud xarajatlaridan ozod."
+    "body": "Fuqarolik sudiga da’vo. Xodim sud xarajatlaridan ozod.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -849,7 +948,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "dmi"
    },
    {
     "id": "court",
@@ -891,8 +991,39 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "O‘zingizdagi nusxa (qabul belgisi bilan) yoki elektron ariza skrinshoti."
+   },
+   {
+    "need": "m",
+    "how": "Bo‘shatish kuni berilishi shart; bermasalar, talabnomada so‘rang."
+   },
+   {
+    "need": "f",
+    "how": "Buxgalteriyadan yozma so‘rang: qancha hisoblangani ko‘rinadi."
+   },
+   {
+    "need": "m",
+    "how": "Bank ilovasi yoki filialidan: oxirgi tushum sanasi va summasi."
+   },
+   {
+    "need": "m",
+    "how": "Ikkinchi nusxadagi qabul belgisi yoki pochta kvitansiyasi."
+   },
+   {
+    "need": "f",
+    "how": "Hisob-kitob haqidagi va’dalar va xabarlar skrinshoti."
+   }
+  ],
+  "offices": [
+   "dmi",
+   "courts"
   ]
  },
  {
@@ -960,13 +1091,15 @@
     "org": "Iste’molchilar qo‘mitasi",
     "t": "Bajarilmasa, shikoyat qiling",
     "when": "7 kundan keyin",
-    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza. Tekshiruv bepul."
+    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza. Tekshiruv bepul.",
+    "office": "raqobat"
    },
    {
     "org": "Sud",
     "t": "Pul, penya va zararni undiring",
     "when": "Kerak bo‘lsa",
-    "body": "Fuqarolik sudiga da’vo; ma’naviy zararni ham so‘rash mumkin (22-modda)."
+    "body": "Fuqarolik sudiga da’vo; ma’naviy zararni ham so‘rash mumkin (22-modda).",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -1147,7 +1280,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "raqobat"
    },
    {
     "id": "court",
@@ -1189,8 +1323,39 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Chek bo‘lmasa ham huquq saqlanadi: bank ko‘chirmasi, guvoh yoki onlayn buyurtma tasdig‘i ham dalil."
+   },
+   {
+    "need": "f",
+    "how": "Tovar qutisida yoki sotuvchidan; kafolat muddatini ko‘rsatadi."
+   },
+   {
+    "need": "m",
+    "how": "Nuqsonni sana bilan suratga yoki videoga oling."
+   },
+   {
+    "need": "m",
+    "how": "Ikkinchi nusxadagi qabul belgisi yoki pochta kvitansiyasi."
+   },
+   {
+    "need": "f",
+    "how": "Rasmiy servis markazidan yozma xulosa so‘rang."
+   },
+   {
+    "need": "f",
+    "how": "Sotuvchi bilan yozishma, qo‘ng‘iroqlar tarixi."
+   }
+  ],
+  "offices": [
+   "raqobat",
+   "courts"
   ]
  },
  {
@@ -1248,13 +1413,15 @@
     "org": "Iste’molchilar qo‘mitasi",
     "t": "Rad etilsa, shikoyat qiling",
     "when": "Rad javobidan keyin",
-    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza."
+    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza.",
+    "office": "raqobat"
    },
    {
     "org": "Sud",
     "t": "Pulni undiring",
     "when": "Kerak bo‘lsa",
-    "body": "Fuqarolik sudiga da’vo."
+    "body": "Fuqarolik sudiga da’vo.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -1376,8 +1543,31 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "raqobat"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Chek yoki bank ko‘chirmasi: xarid sanasi 10 kunlik muddat uchun muhim."
+   },
+   {
+    "need": "m",
+    "how": "Yorliq va qadoqni olib tashlamang — tovar ishlatilmaganini ko‘rsatadi."
+   },
+   {
+    "need": "f",
+    "how": "Rad etishsa, yozma rad javobini so‘rang yoki suhbatni videoga oling."
+   },
+   {
+    "need": "f",
+    "how": "Do‘kon bilan yozishma skrinshotlari."
+   }
+  ],
+  "offices": [
+   "raqobat",
+   "courts"
   ]
  },
  {
@@ -1439,13 +1629,15 @@
     "t": "Sudga ariza bering",
     "when": "Imkon qadar tez",
     "hot": true,
-    "body": "Javobgar yoki o‘zingiz yashaydigan joydagi fuqarolik ishlari sudiga. Davlat boji to‘lanmaydi; elektron topshirish ham mumkin."
+    "body": "Javobgar yoki o‘zingiz yashaydigan joydagi fuqarolik ishlari sudiga. Davlat boji to‘lanmaydi; elektron topshirish ham mumkin.",
+    "office": "courts"
    },
    {
     "org": "Majburiy ijro byurosi",
     "t": "To‘lanmasa, ijroga bering",
     "when": "Sud qaroridan keyin",
-    "body": "Aliment javobgarning ish haqidan ushlab qolinadi."
+    "body": "Aliment javobgarning ish haqidan ushlab qolinadi.",
+    "office": "mib"
    }
   ],
   "evidence": [
@@ -1553,8 +1745,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "FHDYo organidan yoki my.gov.uz orqali takroriy guvohnoma olish mumkin."
+   },
+   {
+    "need": "f",
+    "how": "Nikoh yoki ajrim guvohnomasi — FHDYo organi yoki my.gov.uz. Otalik tug‘ilganlik guvohnomasi bilan ham tasdiqlanadi."
+   },
+   {
+    "need": "m",
+    "how": "O‘zingizning pasportingiz yoki ID-kartangiz nusxasi."
+   },
+   {
+    "need": "f",
+    "how": "Bilganingizni yozing; aniq bo‘lmasa, sud so‘rov yuborishi mumkin."
+   },
+   {
+    "need": "f",
+    "how": "Mahalla fuqarolar yig‘inidan ma’lumotnoma."
+   }
+  ],
+  "offices": [
+   "courts",
+   "mib"
   ]
  },
  {
@@ -1620,14 +1839,16 @@
     "org": "Xalq qabulxonasi",
     "t": "Muqobil yo‘l",
     "when": "Istalgan payt",
-    "body": "Prezidentning virtual qabulxonasi, 1000 qisqa raqamiga SMS yoki 0-800-210-00-00 telefoni orqali."
+    "body": "Prezidentning virtual qabulxonasi, 1000 qisqa raqamiga SMS yoki 0-800-210-00-00 telefoni orqali.",
+    "office": "pm"
    },
    {
     "org": "Ma’muriy sud",
     "t": "Harakatsizlik ustidan sudga",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Sud idorani murojaatni ko‘rib chiqishga majburlashi mumkin. Jismoniy shaxslar ariza berishda davlat boji to‘lamaydi."
+    "body": "Sud idorani murojaatni ko‘rib chiqishga majburlashi mumkin. Jismoniy shaxslar ariza berishda davlat boji to‘lamaydi.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -1761,8 +1982,31 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Ikkinchi nusxadagi kiruvchi raqam va sana yoki elektron murojaat raqami."
+   },
+   {
+    "need": "m",
+    "how": "Pochta kvitansiyasi va xabarnoma yoki portal tasdig‘i skrinshoti."
+   },
+   {
+    "need": "f",
+    "how": "Rasmiy javob kelgan bo‘lsa, uning nusxasi."
+   },
+   {
+    "need": "f",
+    "how": "Qo‘ng‘iroqlar, xatlar va qabulga borgan sanalaringiz."
+   }
+  ],
+  "offices": [
+   "pm",
+   "courts"
   ]
  },
  {
@@ -1827,7 +2071,8 @@
     "t": "Qarorni haqiqiy emas deb topishni so‘rang",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Zarur bo‘lsa, qaror ijrosini vaqtincha to‘xtatishni ham so‘rang."
+    "body": "Zarur bo‘lsa, qaror ijrosini vaqtincha to‘xtatishni ham so‘rang.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -1909,8 +2154,31 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Qaror nusxasini organdan yozma so‘rang."
+   },
+   {
+    "need": "m",
+    "how": "Qaror topshirilgan xat, konvert yoki elektron xabar: 6 oylik muddat shundan hisoblanadi."
+   },
+   {
+    "need": "m",
+    "how": "Kadastr, shartnoma, ruxsatnoma va boshqa huquqni tasdiqlovchi hujjatlar."
+   },
+   {
+    "need": "f",
+    "how": "Organga yuborgan murojaatlaringiz va javoblar."
+   }
+  ],
+  "offices": [
+   "courts",
+   "pm"
   ]
  },
  {
@@ -1972,7 +2240,8 @@
     "t": "Shikoyat bering",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Yuqori turuvchi organga yoki jinoyat ishlari bo‘yicha tuman (shahar) sudiga. YHXX jarimasi bo‘lsa, my.gov.uz orqali elektron shikoyat qilish mumkin."
+    "body": "Yuqori turuvchi organga yoki jinoyat ishlari bo‘yicha tuman (shahar) sudiga. YHXX jarimasi bo‘lsa, my.gov.uz orqali elektron shikoyat qilish mumkin.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -2108,8 +2377,34 @@
       "Qog‘ozda topshirsangiz, ikkinchi nusxaga qabul belgisini qo‘ydiring."
      ],
      "links": []
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Qaror yoki bayonnoma nusxasi; olgan sanangiz shikoyat muddati uchun muhim."
+   },
+   {
+    "need": "m",
+    "how": "Voqeani ko‘rsatuvchi foto yoki video."
+   },
+   {
+    "need": "f",
+    "how": "Guvohlarning ismi va telefoni."
+   },
+   {
+    "need": "m",
+    "how": "Qoidabuzarlik bo‘lmaganini ko‘rsatuvchi hujjatlar (ruxsatnoma, chek va h.k.)."
+   },
+   {
+    "need": "f",
+    "how": "Organ bilan yozishmalar."
+   }
+  ],
+  "offices": [
+   "courts"
   ]
  },
  {
@@ -2164,13 +2459,15 @@
     "t": "Qarzni sud orqali undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Davlat boji to‘lanadi, miqdori da’vo summasiga bog‘liq."
+    "body": "Fuqarolik sudiga da’vo. Davlat boji to‘lanadi, miqdori da’vo summasiga bog‘liq.",
+    "office": "courts"
    },
    {
     "org": "Majburiy ijro byurosi",
     "t": "Qaror ijrosi",
     "when": "Sud qaroridan keyin",
-    "body": "To‘lanmasa, sud hujjati majburiy ijroga yuboriladi."
+    "body": "To‘lanmasa, sud hujjati majburiy ijroga yuboriladi.",
+    "office": "mib"
    }
   ],
   "evidence": [
@@ -2303,8 +2600,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Asl tilxatni saqlang, sudga nusxasini bering; asli sudda ko‘rsatiladi."
+   },
+   {
+    "need": "m",
+    "how": "Bank ilovasi yoki filialidan o‘tkazma ko‘chirmasi."
+   },
+   {
+    "need": "f",
+    "how": "Qarzni tan olgan xabarlar — skrinshot va ovozli xabarlarni saqlang."
+   },
+   {
+    "need": "m",
+    "how": "Talabnomani xabarnoma bilan buyurtma xat orqali yuboring."
+   },
+   {
+    "need": "f",
+    "how": "Pul berilganini ko‘rgan shaxslar."
+   }
+  ],
+  "offices": [
+   "courts",
+   "mib"
   ]
  },
  {
@@ -2361,13 +2685,15 @@
     "t": "Pulni sud orqali undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Garov to‘langanini tasdiqlovchi tilxat yoki bank o‘tkazmasi asosiy dalil bo‘ladi."
+    "body": "Fuqarolik sudiga da’vo. Garov to‘langanini tasdiqlovchi tilxat yoki bank o‘tkazmasi asosiy dalil bo‘ladi.",
+    "office": "courts"
    },
    {
     "org": "Majburiy ijro byurosi",
     "t": "Qaror ijrosi",
     "when": "Sud qaroridan keyin",
-    "body": "To‘lanmasa, sud hujjati majburiy ijroga yuboriladi."
+    "body": "To‘lanmasa, sud hujjati majburiy ijroga yuboriladi.",
+    "office": "mib"
    }
   ],
   "evidence": [
@@ -2502,8 +2828,39 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Yozma shartnoma bo‘lmasa, ijara haqi to‘lovlari va yozishmalar ijarani tasdiqlaydi."
+   },
+   {
+    "need": "m",
+    "how": "Garov puli tilxati yoki bank o‘tkazmasi — eng asosiy dalil."
+   },
+   {
+    "need": "m",
+    "how": "Chiqib ketish kuni har bir xonani sana bilan suratga oling."
+   },
+   {
+    "need": "f",
+    "how": "Kalit topshirilgani haqida ikki tomon imzolagan qog‘oz."
+   },
+   {
+    "need": "f",
+    "how": "Garovni qaytarish haqidagi va’dalar va xabarlar."
+   },
+   {
+    "need": "f",
+    "how": "Kalit topshirilganini ko‘rgan qo‘shnilar yoki tanishlar."
+   }
+  ],
+  "offices": [
+   "courts",
+   "mib"
   ]
  },
  {
@@ -2560,13 +2917,15 @@
     "org": "Politsiya",
     "t": "Tahdid yoki kuch ishlatilsa — 102",
     "when": "Darhol, kerak bo‘lsa",
-    "body": "Qulfni almashtirish, narsalarni chiqarib tashlash, tahdid qilish — o‘zboshimchalik bo‘lishi mumkin. Voqeani foto va videoga oling."
+    "body": "Qulfni almashtirish, narsalarni chiqarib tashlash, tahdid qilish — o‘zboshimchalik bo‘lishi mumkin. Voqeani foto va videoga oling.",
+    "office": "iiv"
    },
    {
     "org": "Sud",
     "t": "Huquqingizni sud orqali himoya qiling",
     "when": "Kerak bo‘lsa",
-    "body": "Uydan foydalanishga to‘sqinlik qilmaslikni, yashalmagan davr uchun to‘langan pul va zararni undirishni so‘rash mumkin."
+    "body": "Uydan foydalanishga to‘sqinlik qilmaslikni, yashalmagan davr uchun to‘langan pul va zararni undirishni so‘rash mumkin.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -2709,8 +3068,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Shartnomada muddat ko‘rsatilgani muhim: muddatidan oldin faqat sud orqali bekor qilinadi."
+   },
+   {
+    "need": "m",
+    "how": "Ijara haqi o‘z vaqtida to‘langanini ko‘rsatuvchi kvitansiya yoki o‘tkazmalar."
+   },
+   {
+    "need": "m",
+    "how": "Uy egasining talabini skrinshot yoki ovozli xabar sifatida saqlang."
+   },
+   {
+    "need": "f",
+    "how": "Qulf almashtirilgan yoki narsalar chiqarilgan bo‘lsa — darhol suratga oling."
+   },
+   {
+    "need": "f",
+    "how": "Voqeani ko‘rgan qo‘shnilar."
+   }
+  ],
+  "offices": [
+   "iiv",
+   "courts"
   ]
  },
  {
@@ -2770,14 +3156,16 @@
     "org": "Iste’molchilar qo‘mitasi",
     "t": "Javob bo‘lmasa, shikoyat qiling",
     "when": "Javob bo‘lmasa",
-    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza. Tekshiruv bepul."
+    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza. Tekshiruv bepul.",
+    "office": "raqobat"
    },
    {
     "org": "Sud",
     "t": "Ortiqcha to‘lovni undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo: qayta hisoblash va asossiz olingan pulni qaytarish."
+    "body": "Fuqarolik sudiga da’vo: qayta hisoblash va asossiz olingan pulni qaytarish.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -2920,7 +3308,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "raqobat"
    },
    {
     "id": "court",
@@ -2961,8 +3350,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Oxirgi oylardagi kvitansiyalar yoki ilovadagi to‘lov tarixi."
+   },
+   {
+    "need": "m",
+    "how": "Hisoblagichni sana va vaqt ko‘rinadigan qilib suratga oling."
+   },
+   {
+    "need": "m",
+    "how": "Kvitansiyada yoki xizmat ko‘rsatuvchining ilovasida ko‘rsatilgan."
+   },
+   {
+    "need": "f",
+    "how": "Xizmat ko‘rsatuvchidan yozma so‘rang: qanday hisoblangani ko‘rinadi."
+   },
+   {
+    "need": "f",
+    "how": "Murojaat raqamlari, xatlar va javoblar."
+   }
+  ],
+  "offices": [
+   "raqobat",
+   "courts"
   ]
  },
  {
@@ -3021,13 +3437,15 @@
     "org": "Iste’molchilar qo‘mitasi",
     "t": "Tuzatilmasa, shikoyat qiling",
     "when": "Javob bo‘lmasa",
-    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza."
+    "body": "Raqobat va iste’molchilar qo‘mitasining hududiy boshqarmasiga ariza.",
+    "office": "raqobat"
    },
    {
     "org": "Sud",
     "t": "Qayta hisoblash, penya va zararni undiring",
     "when": "Kerak bo‘lsa",
-    "body": "Fuqarolik sudiga da’vo; ma’naviy zararni ham so‘rash mumkin (22-modda)."
+    "body": "Fuqarolik sudiga da’vo; ma’naviy zararni ham so‘rash mumkin (22-modda).",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -3162,7 +3580,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "raqobat"
    },
    {
     "id": "court",
@@ -3204,8 +3623,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Avariya xizmatiga qo‘ng‘iroq qilganda murojaat raqamini so‘rang va yozib qo‘ying."
+   },
+   {
+    "need": "m",
+    "how": "Sana va vaqt ko‘rinadigan foto yoki video."
+   },
+   {
+    "need": "f",
+    "how": "Qo‘shnilar bilan birga imzolangan ariza kuchliroq."
+   },
+   {
+    "need": "f",
+    "how": "To‘lovlar o‘z vaqtida qilinganini ko‘rsatadi."
+   },
+   {
+    "need": "f",
+    "how": "Xizmat ko‘rsatuvchi bilan yozishmalar."
+   }
+  ],
+  "offices": [
+   "raqobat",
+   "courts"
   ]
  },
  {
@@ -3268,19 +3714,22 @@
     "org": "Politsiya",
     "t": "Firibgarlik bo‘lsa, ariza bering",
     "when": "Darhol",
-    "body": "Tuman IIB yoki 102. Hech kimga SMS kod, karta muddati va CVV ni aytmang."
+    "body": "Tuman IIB yoki 102. Hech kimga SMS kod, karta muddati va CVV ni aytmang.",
+    "office": "iiv"
    },
    {
     "org": "Markaziy bank",
     "t": "Bank rad etsa, shikoyat qiling",
     "when": "Bank javobidan keyin",
-    "body": "Ishonch telefoni (71) 200-00-44, cbu.uz virtual qabulxonasi yoki murojaat.gov.uz."
+    "body": "Ishonch telefoni (71) 200-00-44, cbu.uz virtual qabulxonasi yoki murojaat.gov.uz.",
+    "office": "cbu"
    },
    {
     "org": "Sud",
     "t": "Pulni bankdan undiring",
     "when": "Kerak bo‘lsa",
-    "body": "Fuqarolik sudiga da’vo. Amaliyotni o‘zingiz tasdiqlamaganingiz asosiy dalil."
+    "body": "Fuqarolik sudiga da’vo. Amaliyotni o‘zingiz tasdiqlamaganingiz asosiy dalil.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -3427,7 +3876,8 @@
        "url": "https://cbu.uz/ru/consumer-protection/"
       }
      ]
-    }
+    },
+    "office": "cbu"
    },
    {
     "id": "court",
@@ -3469,8 +3919,40 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Bank ilovasidan yoki filialdan amaliyotlar ko‘chirmasini oling."
+   },
+   {
+    "need": "m",
+    "how": "SMS va ilovadagi bildirishnomalarni o‘chirmang, skrinshot qiling."
+   },
+   {
+    "need": "m",
+    "how": "Bloklagan vaqtingizni yozib qo‘ying yoki bankdan tasdiq so‘rang."
+   },
+   {
+    "need": "m",
+    "how": "Arizani yozma bering va qabul raqamini oling."
+   },
+   {
+    "need": "f",
+    "how": "Politsiyaga ariza berganingizni tasdiqlovchi talon."
+   },
+   {
+    "need": "f",
+    "how": "Qo‘ng‘iroq qilgan raqam, xabarlar va havolalar skrinshoti."
+   }
+  ],
+  "offices": [
+   "iiv",
+   "cbu",
+   "courts"
   ]
  },
  {
@@ -3533,20 +4015,23 @@
     "org": "Markaziy bank",
     "t": "Shikoyat qiling",
     "when": "Javob bo‘lmasa",
-    "body": "Markaziy bank majburiy ko‘rsatma berishi va tashkilotga jarima qo‘llashi mumkin. Ishonch telefoni (71) 200-00-44."
+    "body": "Markaziy bank majburiy ko‘rsatma berishi va tashkilotga jarima qo‘llashi mumkin. Ishonch telefoni (71) 200-00-44.",
+    "office": "cbu"
    },
    {
     "org": "Politsiya",
     "t": "Tahdid qilinsa, ariza bering",
     "when": "Kerak bo‘lsa",
-    "body": "Kollektor tahdid qilsa, haqorat qilsa yoki qarindoshlaringizga bosim o‘tkazsa, qo‘ng‘iroqlarni yozib oling va 102 ga murojaat qiling."
+    "body": "Kollektor tahdid qilsa, haqorat qilsa yoki qarindoshlaringizga bosim o‘tkazsa, qo‘ng‘iroqlarni yozib oling va 102 ga murojaat qiling.",
+    "office": "iiv"
    },
    {
     "org": "Sud",
     "t": "Ortiqcha undirilgan pulni qaytaring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Shartnoma, jadval va ko‘chirma asosiy dalil."
+    "body": "Fuqarolik sudiga da’vo. Shartnoma, jadval va ko‘chirma asosiy dalil.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -3691,7 +4176,8 @@
        "url": "https://cbu.uz/ru/consumer-protection/"
       }
      ]
-    }
+    },
+    "office": "cbu"
    },
    {
     "id": "court",
@@ -3734,8 +4220,36 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Shartnoma nusxasi — o‘zingizda yoki tashkilotning ilovasida."
+   },
+   {
+    "need": "m",
+    "how": "Shartnomaga ilova qilingan to‘lov jadvali."
+   },
+   {
+    "need": "m",
+    "how": "Barcha to‘lovlar ko‘chirmasi: bank ilovasi yoki kvitansiyalar."
+   },
+   {
+    "need": "m",
+    "how": "Tashkilotdan foiz, komissiya va jarimalar alohida ko‘rsatilgan ma’lumot so‘rang."
+   },
+   {
+    "need": "f",
+    "how": "Tahdid yoki haqorat bo‘lsa, qo‘ng‘iroqlarni yozib oling."
+   }
+  ],
+  "offices": [
+   "cbu",
+   "iiv",
+   "courts"
   ]
  },
  {
@@ -3794,7 +4308,8 @@
     "org": "Elektron",
     "t": "Qaror va foto-videoni tekshiring",
     "when": "Darhol",
-    "body": "my.gov.uz yoki bank ilovasida qaror raqami bo‘yicha surat va videoni ko‘ring: davlat raqami, vaqt va joy to‘g‘rimi."
+    "body": "my.gov.uz yoki bank ilovasida qaror raqami bo‘yicha surat va videoni ko‘ring: davlat raqami, vaqt va joy to‘g‘rimi.",
+    "office": "egov"
    },
    {
     "org": "Tanlov",
@@ -3807,7 +4322,8 @@
     "t": "Shikoyat bering",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "my.gov.uz orqali elektron, yoki qog‘ozda yuqori turuvchi organga yoxud jinoyat ishlari bo‘yicha tuman (shahar) sudiga."
+    "body": "my.gov.uz orqali elektron, yoki qog‘ozda yuqori turuvchi organga yoxud jinoyat ishlari bo‘yicha tuman (shahar) sudiga.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -3952,8 +4468,39 @@
       "Qog‘ozda topshirsangiz, ikkinchi nusxaga qabul belgisini qo‘ydiring."
      ],
      "links": []
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Qaror raqamini my.gov.uz yoki bank ilovasida toping; olgan sanangiz muddat uchun muhim."
+   },
+   {
+    "need": "m",
+    "how": "Qaror bo‘yicha foto va videoni my.gov.uz da ko‘rib, saqlab qo‘ying."
+   },
+   {
+    "need": "f",
+    "how": "Videoregistrator yozuvini darhol nusxalang — u ustidan yozib yuboriladi."
+   },
+   {
+    "need": "m",
+    "how": "Chek, yo‘l varag‘i, GPS tarixi yoki boshqa joyda bo‘lganingiz dalili."
+   },
+   {
+    "need": "f",
+    "how": "Oldi-sotdi shartnomasi yoki ishonchnoma nusxasi."
+   },
+   {
+    "need": "f",
+    "how": "Voqeani ko‘rgan yo‘lovchilar yoki boshqa haydovchilar."
+   }
+  ],
+  "offices": [
+   "egov",
+   "courts"
   ]
  },
  {
@@ -4026,7 +4573,8 @@
     "t": "Sug‘urta pulini undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo: to‘lanmagan sug‘urta to‘lovi, baholash va sud xarajatlari."
+    "body": "Fuqarolik sudiga da’vo: to‘lanmagan sug‘urta to‘lovi, baholash va sud xarajatlari.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -4170,8 +4718,39 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Aybdor haydovchidan polis raqamini oling; YTH sxemasida ham ko‘rsatiladi."
+   },
+   {
+    "need": "m",
+    "how": "YHXX xodimi rasmiylashtirgan hujjatlar nusxasi."
+   },
+   {
+    "need": "m",
+    "how": "Sug‘urtachiga ariza nusxasi: 15 kunlik muddat shu sanadan hisoblanadi."
+   },
+   {
+    "need": "m",
+    "how": "Litsenziyali baholovchidan hisobot oling, ayniqsa to‘lov kam bo‘lsa."
+   },
+   {
+    "need": "f",
+    "how": "Voqea joyida va keyin avtomobilni har tomondan suratga oling."
+   },
+   {
+    "need": "f",
+    "how": "Ta’mirlash va evakuator xarajatlari cheklari."
+   }
+  ],
+  "offices": [
+   "courts",
+   "napp"
   ]
  },
  {
@@ -4221,26 +4800,30 @@
     "org": "Pensiya jamg‘armasi",
     "t": "Qaror va hisob-kitob nusxasini so‘rang",
     "when": "Darhol",
-    "body": "Qaysi staj va ish haqi davrlari hisobga olinmaganini aniqlang."
+    "body": "Qaysi staj va ish haqi davrlari hisobga olinmaganini aniqlang.",
+    "office": "pension"
    },
    {
     "org": "Pensiya jamg‘armasi",
     "t": "Qayta hisoblash arizasi bering",
     "when": "Hujjatlar to‘plangach",
-    "body": "Arxiv ma’lumotnomasi, mehnat daftarchasi va ish haqi ma’lumotnomalarini ilova qiling."
+    "body": "Arxiv ma’lumotnomasi, mehnat daftarchasi va ish haqi ma’lumotnomalarini ilova qiling.",
+    "office": "pension"
    },
    {
     "org": "Yuqori organ",
     "t": "Shikoyat yozing",
     "when": "Rad etilsa",
-    "body": "Pensiya jamg‘armasining viloyat (shahar) boshqarmasiga. Javobni kutib, sud muddatini o‘tkazib yubormang."
+    "body": "Pensiya jamg‘armasining viloyat (shahar) boshqarmasiga. Javobni kutib, sud muddatini o‘tkazib yubormang.",
+    "office": "pension"
    },
    {
     "org": "Ma’muriy sud",
     "t": "Qarorni qonunga xilof deb topishni so‘rang",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Jismoniy shaxslar ma’muriy sudga ariza berishda davlat boji to‘lamaydi."
+    "body": "Jismoniy shaxslar ma’muriy sudga ariza berishda davlat boji to‘lamaydi.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -4334,7 +4917,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "pension"
    },
    {
     "id": "court",
@@ -4375,8 +4959,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Qaror yoki rad javobining yozma nusxasini Pensiya jamg‘armasi bo‘limidan so‘rang."
+   },
+   {
+    "need": "m",
+    "how": "Asl mehnat daftarchasi va uning nusxasi."
+   },
+   {
+    "need": "m",
+    "how": "Staj yoki ish haqi hisobga olinmagan bo‘lsa — sobiq ish joyi yoki davlat arxividan ma’lumotnoma."
+   },
+   {
+    "need": "m",
+    "how": "Pasport yoki ID-karta va JShShIR."
+   },
+   {
+    "need": "f",
+    "how": "Pensiya qanday hisoblanganini yozma so‘rang."
+   }
+  ],
+  "offices": [
+   "pension",
+   "courts"
   ]
  },
  {
@@ -4425,26 +5036,30 @@
     "org": "«Inson» markazi",
     "t": "Rad javobining sababini yozma so‘rang",
     "when": "Darhol",
-    "body": "Qaysi mezon bo‘yicha (daromad, mulk, oila tarkibi) rad etilgani ko‘rsatilishi kerak."
+    "body": "Qaysi mezon bo‘yicha (daromad, mulk, oila tarkibi) rad etilgani ko‘rsatilishi kerak.",
+    "office": "social"
    },
    {
     "org": "«Inson» markazi",
     "t": "Xato ma’lumotni tuzating",
     "when": "Imkon qadar tez",
-    "body": "Daromad yoki oila tarkibi noto‘g‘ri olingan bo‘lsa, tasdiqlovchi ma’lumotnoma bilan qayta ariza bering."
+    "body": "Daromad yoki oila tarkibi noto‘g‘ri olingan bo‘lsa, tasdiqlovchi ma’lumotnoma bilan qayta ariza bering.",
+    "office": "social"
    },
    {
     "org": "Yuqori organ",
     "t": "Shikoyat yozing",
     "when": "Rad etilsa",
-    "body": "Ijtimoiy himoya milliy agentligining hududiy boshqarmasiga."
+    "body": "Ijtimoiy himoya milliy agentligining hududiy boshqarmasiga.",
+    "office": "social"
    },
    {
     "org": "Ma’muriy sud",
     "t": "Rad javobini qonunga xilof deb topishni so‘rang",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Jismoniy shaxslar ma’muriy sudga ariza berishda davlat boji to‘lamaydi."
+    "body": "Jismoniy shaxslar ma’muriy sudga ariza berishda davlat boji to‘lamaydi.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -4546,7 +5161,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "social"
    },
    {
     "id": "court",
@@ -4587,8 +5203,35 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Rad javobi yoki to‘xtatish haqidagi xabarni my.gov.uz shaxsiy kabinetidan saqlang."
+   },
+   {
+    "need": "m",
+    "how": "Ariza raqami yoki nusxasi (my.gov.uz da ko‘rinadi)."
+   },
+   {
+    "need": "m",
+    "how": "Oila tarkibi haqida ma’lumotnoma — mahalla yoki my.gov.uz."
+   },
+   {
+    "need": "m",
+    "how": "Ish joyidan yoki boshqa manbadan daromad haqida ma’lumotnoma; ishsiz bo‘lsangiz — buni tasdiqlovchi hujjat."
+   },
+   {
+    "need": "f",
+    "how": "Nogironlik guvohnomasi yoki bolalarning tug‘ilganlik guvohnomalari."
+   }
+  ],
+  "offices": [
+   "social",
+   "courts"
   ]
  },
  {
@@ -4649,20 +5292,23 @@
     "org": "Migratsiya agentligi",
     "t": "Shikoyat qiling",
     "when": "Parallel",
-    "body": "Vazirlar Mahkamasi huzuridagi Migratsiya agentligi litsenziyani tekshiradi va agentliklar ustidan nazorat qiladi. Litsenziyasiz bo‘lsa, buni albatta yozing."
+    "body": "Vazirlar Mahkamasi huzuridagi Migratsiya agentligi litsenziyani tekshiradi va agentliklar ustidan nazorat qiladi. Litsenziyasiz bo‘lsa, buni albatta yozing.",
+    "office": "migration"
    },
    {
     "org": "Politsiya",
     "t": "Firibgarlik bo‘lsa, ariza bering",
     "when": "Darhol",
-    "body": "Litsenziyasiz vositachi pul olib g‘oyib bo‘lsa — firibgarlik alomati. Tuman IIB yoki 102."
+    "body": "Litsenziyasiz vositachi pul olib g‘oyib bo‘lsa — firibgarlik alomati. Tuman IIB yoki 102.",
+    "office": "iiv"
    },
    {
     "org": "Sud",
     "t": "Pulni undiring",
     "when": "{deadline} gacha",
     "hot": true,
-    "body": "Fuqarolik sudiga da’vo. Shartnoma, to‘lov hujjati va yozishmalar asosiy dalil."
+    "body": "Fuqarolik sudiga da’vo. Shartnoma, to‘lov hujjati va yozishmalar asosiy dalil.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -4798,7 +5444,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "migration"
    },
    {
     "id": "court",
@@ -4841,8 +5488,36 @@
        "url": "https://my.sud.uz/"
       }
      ]
-    }
+    },
+    "office": "courts"
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Yozma shartnoma bo‘lmasa, to‘lov va yozishmalar asosiy dalil bo‘ladi."
+   },
+   {
+    "need": "m",
+    "how": "Kvitansiya yoki bank o‘tkazmasi — kimga va qancha to‘laganingiz."
+   },
+   {
+    "need": "m",
+    "how": "Litsenziya bor-yo‘qligini Migratsiya agentligidan so‘rang (1282)."
+   },
+   {
+    "need": "m",
+    "how": "Va’dalar yozilgan xabarlarni o‘chirmang, skrinshot qiling."
+   },
+   {
+    "need": "f",
+    "how": "Viza, taklifnoma yoki ish taklifi nusxalari."
+   }
+  ],
+  "offices": [
+   "migration",
+   "iiv",
+   "courts"
   ]
  },
  {
@@ -4900,13 +5575,15 @@
     "t": "Elchixona yoki konsullikka murojaat qiling",
     "when": "Darhol",
     "hot": true,
-    "body": "Pasport olib qo‘yilgan bo‘lsa, konsullik O‘zbekistonga qaytish uchun guvohnoma rasmiylashtirishi va mahalliy organlarga murojaatda ko‘maklashishi mumkin."
+    "body": "Pasport olib qo‘yilgan bo‘lsa, konsullik O‘zbekistonga qaytish uchun guvohnoma rasmiylashtirishi va mahalliy organlarga murojaatda ko‘maklashishi mumkin.",
+    "office": "mfa"
    },
    {
     "org": "Migratsiya agentligi",
     "t": "Yordam so‘rang",
     "when": "Darhol",
-    "body": "Agentlik orqali ketgan bo‘lsangiz, Migratsiya agentligi agentlikdan boshqa ish beruvchi topishni yoki sizni qaytarishni talab qiladi; bajarilmasa, o‘zi qaytaradi."
+    "body": "Agentlik orqali ketgan bo‘lsangiz, Migratsiya agentligi agentlikdan boshqa ish beruvchi topishni yoki sizni qaytarishni talab qiladi; bajarilmasa, o‘zi qaytaradi.",
+    "office": "migration"
    },
    {
     "org": "Agentlik",
@@ -4918,7 +5595,8 @@
     "org": "Sud",
     "t": "Zararni undiring",
     "when": "Qaytgandan keyin",
-    "body": "Agentlik va xorijiy ish beruvchi solidar javobgar: to‘lanmagan haq va xarajatlarni agentlikdan undirish mumkin."
+    "body": "Agentlik va xorijiy ish beruvchi solidar javobgar: to‘lanmagan haq va xarajatlarni agentlikdan undirish mumkin.",
+    "office": "courts"
    }
   ],
   "evidence": [
@@ -5014,7 +5692,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "migration"
    },
    {
     "id": "consul",
@@ -5051,7 +5730,8 @@
        "url": "https://pm.gov.uz/"
       }
      ]
-    }
+    },
+    "office": "mfa"
    },
    {
     "id": "recruiter",
@@ -5085,6 +5765,33 @@
      "links": []
     }
    }
+  ],
+  "evidenceInfo": [
+   {
+    "need": "m",
+    "how": "Shartnoma yoki ish taklifining surati telefoningizda saqlansin."
+   },
+   {
+    "need": "f",
+    "how": "Agentlik orqali ketgan bo‘lsangiz — shartnoma nusxasi."
+   },
+   {
+    "need": "m",
+    "how": "Ish vaqti yozuvlari, ish beruvchi bilan yozishmalar, to‘lov tarixi."
+   },
+   {
+    "need": "m",
+    "how": "Pasport olib qo‘yilgan bo‘lsa ham, uning surati konsullikda yordam beradi."
+   },
+   {
+    "need": "m",
+    "how": "Ish beruvchining nomi, manzili va telefoni."
+   }
+  ],
+  "offices": [
+   "mfa",
+   "migration",
+   "courts"
   ]
  }
 ]

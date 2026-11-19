@@ -127,3 +127,32 @@ test("Oflayn tahlil faktlarni holat maydonlariga joylaydi", async () => {
   assert.equal(r.facts.form.seller, "«Texnomart»");
   assert.equal(r.facts.form.price, "5000000");
 });
+
+test("Dalillar yo‘riqnomasi: har bir dalil uchun ahamiyat va qayerdan olinishi", () => {
+  for (const s of SCENARIOS){
+    assert.equal(s.evidenceInfo.length, s.evidence.length, s.id);
+    assert.ok(s.evidenceInfo.every(x => (x.need === "m" || x.need === "f") && x.how.length > 10), s.id);
+    assert.ok(s.evidenceInfo.some(x => x.need === "m"), `${s.id}: kamida bitta muhim dalil`);
+  }
+});
+
+test("Idoralar: faqat rasmiy manbalar, bosiladigan telefonlar, qadamlar bilan bog‘langan", () => {
+  const OFFICIAL = /^https:\/\/(?:[\w-]+\.)*(?:gov\.uz|cbu\.uz|napp\.uz|mib\.uz|sud\.uz|mehnat\.uz|mfa\.uz)\//;
+  const plan = buildPlan({ scenario:"bank_karta", today });
+  assert.deepEqual(plan.offices.map(o => o.id), ["iiv", "cbu", "courts"]);
+  assert.match(plan.officesChecked, /2026/);
+  for (const s of SCENARIOS){
+    const p = buildPlan({ scenario:s.id, today });
+    assert.ok(p.offices.length > 0, s.id);
+    const ids = new Set(p.offices.map(o => o.id));
+    for (const st of p.steps) if (st.office) assert.ok(ids.has(st.office), `${s.id}: ${st.office}`);
+    for (const o of p.offices){
+      assert.match(o.src, OFFICIAL, `${o.id}: manba rasmiy emas`);
+      for (const l of [...(o.links || []), ...(o.local ? [o.local] : [])]) assert.match(l.url, /^https:\/\//, `${o.id}: ${l.url}`);
+      for (const ph of [...(o.phones || []), ...(o.abroad || [])]) assert.match(ph.tel, /^\+?\d{3,15}$/, `${o.id}: ${ph.text}`);
+    }
+  }
+  // ariza qabul qiluvchisi idoraga bog‘langan
+  assert.equal(SCENARIOS.find(s => s.id === "bank_karta").docs.find(d => d.id === "cbu").office, "cbu");
+  assert.equal(SCENARIOS.find(s => s.id === "pensiya").docs.find(d => d.id === "higher").office, "pension");
+});

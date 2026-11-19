@@ -33,8 +33,11 @@ function build(lang){
   const APPLICANT_FIELDS = overlay(load("applicant.json"), tr?.applicant);
   const EXTRA = overlay({ k:"extra", label:"Qo‘shimcha holatlar", ph:"qo‘shimcha", type:"textarea" }, tr?.extra);
   const fieldsOf = s => [...APPLICANT_FIELDS, ...s.fields, EXTRA];
+  // Idoralar: raqam va havolalar o‘zbekcha bazadan, matnlar tarjimadan
+  const off = load("offices.json");
+  const OFFICES = dict(off.list.map(o => overlay(o, tr?.offices[o.id])));
   return {
-    lang, LAWS, DOMAINS, NORMS, SCENARIOS, APPLICANT_FIELDS,
+    lang, LAWS, DOMAINS, NORMS, SCENARIOS, APPLICANT_FIELDS, OFFICES, OFFICES_CHECKED: off.checked,
     NORM_BY_ID: dict(NORMS), SCENARIO_BY_ID: dict(SCENARIOS),
     fieldsOf, fieldMap: s => dict(fieldsOf(s), "k")
   };

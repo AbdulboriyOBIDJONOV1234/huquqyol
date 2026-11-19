@@ -15,7 +15,7 @@ import { cyrillicModel } from "../public/translit.js";
 import { domainCardsHTML, examplesHTML } from "../public/shared.js";
 import { makeT, LANGS, HTML_LANG } from "../public/i18n.js";
 import { resolveLang, parseLang, deepCyr, msg, LANG_COOKIE } from "./i18n.js";
-import { stats } from "./stats.js";
+import { stats, DEFAULT_FILE as STATS_FILE } from "./stats.js";
 import { statsPage } from "./statsPage.js";
 
 // Til: uz va ru o‘z bazasidan, cyr — uz natijasining kirill shakli
@@ -111,14 +111,20 @@ const versioned = (html, list) => list.reduce((h, f) => h.replaceAll(`"/${f}"`, 
 const jsonForHtml = o => JSON.stringify(o).replace(/</g, "\\u003c").replace(/\u2028|\u2029/g, "");
 const escAttr = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const TEMPLATE = versioned(readFileSync(join(PUBLIC, "index.html"), "utf8"), ASSETS);
+// Ijtimoiy tarmoqlar (Telegram, Facebook) uchun to‘liq URL: PUBLIC_HOST berilgan bo‘lsa
+const OG_BASE = /^[a-z0-9.-]+(?::\d+)?$/i.test(process.env.PUBLIC_HOST || "") ? `https://${process.env.PUBLIC_HOST}` : "";
+const OG_LOCALE = { uz:"uz_UZ", cyr:"uz_UZ", ru:"ru_RU" };
 function renderIndex(lang){
   const t = makeT(lang), meta = { ai: aiEnabled(), ...META[lang] };
   return TEMPLATE
+    .replace("{{ogBase}}", OG_BASE).replace("{{ogLocale}}", OG_LOCALE[lang])
+    .replace("{{ogUrl}}", OG_BASE ? `
+<meta property="og:url" content="${OG_BASE}/?lang=${lang}">` : "")
     .replace("<!--DOMAINS-->", domainCardsHTML(meta, t))
     .replace("<!--EXAMPLES-->", examplesHTML(lang))
     .replace("<!--META-->", `<script type="application/json" id="meta-data">${jsonForHtml(meta)}</script>`)
     .replace(`data-lang="${lang}" aria-pressed="false"`, `data-lang="${lang}" aria-pressed="true"`)
-    .replace(/\{\{(\w+)\}\}/g, (_, k) => k === "htmlLang" ? HTML_LANG[lang] : k === "lang" ? lang : k === "aiText" ? escAttr(t(meta.ai ? "aiOn" : "aiOff")) : escAttr(t(k)));
+    .replace(/\{\{(\w+)\}\}/g, (_, k) => k === "htmlLang" ? HTML_LANG[lang] : k === "lang" ? lang : k === "aiText" ? escAttr(t(meta.ai ? "aiOn" : "aiOff")) : k === "privacy" ? escAttr(t(meta.ai ? "privacyAi" : "privacy")) : escAttr(t(k)));
 }
 const INDEX = Object.fromEntries(LANGS.map(l => [l, renderIndex(l)]));
 app.get(["/", "/index.html"], (req, res) => {
@@ -176,6 +182,7 @@ app.use((err, req, res, next) => {
 // Serverni ishga tushirish. Hosting (Passenger/cPanel) PORT ni o‘zi beradi; VPS’da HOST=127.0.0.1 bilan
 // faqat Nginx orqali ochiladi. Passenger’da port raqam emas, soket yo‘li bo‘lishi mumkin.
 export function start({ port = process.env.PORT || 3000, host = process.env.HOST } = {}){
+  stats.attachFile(STATS_FILE);                                   // anonim statistika faqat haqiqiy ishga tushirishda diskka yoziladi
   const p = /^\d+$/.test(String(port)) ? Number(port) : port;
   const onListen = () => console.log(`HuquqYo‘l ishga tushdi: ${typeof p === "number" ? `http://${host || "localhost"}:${p}` : p}  (AI: ${aiEnabled() ? "Claude" : "o‘chiq — qidiruv rejimi"})`);
   const server = host && typeof p === "number" ? app.listen(p, host, onListen) : app.listen(p, onListen);

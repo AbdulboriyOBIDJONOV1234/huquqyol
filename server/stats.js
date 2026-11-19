@@ -20,17 +20,18 @@ const empty = now => ({ v: 1, since: dayOf(now), opens: {}, docs: {}, analyze: {
 const inc = (o, k, n = 1) => { o[k] = (o[k] || 0) + n; };
 const SAFE_ID = /^[a-z0-9_]{1,40}$/;
 
-// Testlarda (node --test) faylga yozilmaydi — faqat xotirada
-const DEFAULT_FILE = process.env.NODE_TEST_CONTEXT ? null : process.env.STATS_FILE || join(ROOT, "data", "stats.json");
+// Fayl faqat server start() orqali ulanadi (attachFile): ilovani import qilgan testlar va skriptlar diskka yozmaydi
+export const DEFAULT_FILE = process.env.STATS_FILE || join(ROOT, "data", "stats.json");
 
-export function createStats({ file = DEFAULT_FILE, enabled = process.env.STATS !== "0", now = () => Date.now(), flushMs = 30_000 } = {}){
+export function createStats({ file = null, enabled = process.env.STATS !== "0", now = () => Date.now(), flushMs = 30_000 } = {}){
   let data = empty(now());
-  if (enabled && file){
+  const load = f => {
     try {
-      const d = JSON.parse(readFileSync(file, "utf8"));
+      const d = JSON.parse(readFileSync(f, "utf8"));
       if (d && d.v === 1) data = { ...empty(now()), ...d, analyze: { ...empty(now()).analyze, ...d.analyze } };
     } catch {}
-  }
+  };
+  if (enabled && file) load(file);
   let dirty = false, day = dayOf(now()), salt = randomBytes(32), seen = new Set();
   const rotate = () => { const d = dayOf(now()); if (d !== day){ day = d; salt = randomBytes(32); seen = new Set(); } };
   // true — birinchi marta (sanaladi), false — bugun shu kishidan allaqachon sanalgan
@@ -78,8 +79,11 @@ export function createStats({ file = DEFAULT_FILE, enabled = process.env.STATS !
       dirty = false;
     } catch (e){ console.warn("[stats] saqlab bo‘lmadi:", e.code || e.message); }
   }
-  const timer = enabled && flushMs ? setInterval(flush, flushMs) : null;
-  timer?.unref();
+  let timer = null;
+  const arm = () => { if (enabled && file && flushMs && !timer){ timer = setInterval(flush, flushMs); timer.unref(); } };
+  arm();
+  // Serverni ishga tushirishda: mavjud sanoqlarni yuklab, faylga yozishni yoqish
+  function attachFile(f){ if (!enabled || !f) return; file = f; load(f); arm(); }
 
   // Ommaviy ko‘rinish: holatlar → sohalar, kunlar ketma-ketligi
   function summary({ scenarioDomain = {}, days = 30 } = {}){
@@ -100,7 +104,7 @@ export function createStats({ file = DEFAULT_FILE, enabled = process.env.STATS !
       byDomain, docsByDomain, byScenario: { ...data.opens }, series
     };
   }
-  return { record, flush, summary, close(){ if (timer) clearInterval(timer); flush(); }, _data: () => data };
+  return { record, flush, summary, attachFile, close(){ if (timer) clearInterval(timer); flush(); }, _data: () => data };
 }
 
 export const stats = createStats();

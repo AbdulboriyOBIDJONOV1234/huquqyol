@@ -33,6 +33,7 @@ const M = {
   analyzing:{ uz:"Tahlil qilinmoqda…", ru:"Анализируем…" },
   examplesLabel:{ uz:"Namunalar", ru:"Примеры" },
   privacy:{ uz:"Tahlil uchun faqat shu matn serverga yuboriladi va saqlanmaydi. Ariza ma’lumotlari faqat fayl yasash uchun ishlatiladi.", ru:"Для анализа на сервер отправляется только этот текст, и он не сохраняется. Данные заявления используются только для создания файла." },
+  privacyAi:{ uz:"Tahlil uchun faqat shu matn yuboriladi: serverda saqlanmaydi, AI tahlili uchun Anthropic (Claude) ga uzatiladi. Ariza ma’lumotlari faqat fayl yasash uchun ishlatiladi.", ru:"Для анализа отправляется только этот текст: на сервере не сохраняется, для ИИ-анализа передаётся в Anthropic (Claude). Данные заявления используются только для создания файла." },
   aiOn:{ uz:"AI tahlil: Claude", ru:"ИИ-анализ: Claude" }, aiOff:{ uz:"Qonunlar bazasi bo‘yicha tahlil", ru:"Анализ по базе законов" },
   backToPlan:{ uz:"← Rejaga qaytish", ru:"← К плану" },
   docReady:{ uz:"Arizani to‘ldiring", ru:"Заполните заявление" },

@@ -87,3 +87,16 @@ test("Statistika sahifasi: uch tilda, inline style va skript yoâ€˜q, sohalar roâ
   assert.match(await (await fetch(base + "/statistika", { headers:{ cookie:"hy_fs=2" } })).text(), /<html data-fs="2"/);
   assert.match(await (await fetch(base + "/")).text(), /href="\/statistika"/);
 });
+
+test("Ilovani import qilish diskka yozmaydi: fayl faqat attachFile() bilan ulanadi", () => {
+  const dir = mkdtempSync(join(tmpdir(), "hy-stats2-")), file = join(dir, "s.json");
+  const s = createStats({ flushMs:0 });
+  s.record("open", { scenario:"qarz", domain:"fuqarolik", ip:"x" });
+  s.flush();
+  assert.ok(!existsSync(file));
+  s.attachFile(file);
+  s.record("open", { scenario:"aliment", domain:"oila", ip:"x" });
+  s.flush();
+  assert.equal(JSON.parse(readFileSync(file, "utf8")).opens.aliment, 1);
+  s.close(); rmSync(dir, { recursive:true, force:true });
+});

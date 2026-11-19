@@ -288,7 +288,8 @@ test("Qulaylik: shrift o‘lchami saqlanadi, sahifa va reja ovozda o‘qiladi, o
   const said = await p.evaluate(() => window.__said);
   assert.equal(said[0].voice, "Uzbek voice");
   assert.match(said.map(x => x.text).join(" "), /1-qadam/);
-  assert.ok(await p.locator(".tts-reading").count() === 1);
+  await p.waitForSelector(".tts-reading");                       // belgilash o‘qish boshlanganda (onstart) qo‘yiladi
+  assert.equal(await p.locator(".tts-reading").count(), 1);
   assert.deepEqual(await audit(p), []);
   await p.keyboard.press("Escape");
   assert.equal(await p.isVisible("#ttsBar"), false);

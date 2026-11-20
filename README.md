@@ -1,4 +1,84 @@
-# HuquqYo‘l — AI huquqiy yo‘l xaritasi
+# HuquqYo‘l — huquqingiz buzilganda: qonun, yo‘l va tayyor ariza
+
+[![CI](https://github.com/GiyosjonJumayev/huquqyol/actions/workflows/ci.yml/badge.svg)](https://github.com/GiyosjonJumayev/huquqyol/actions/workflows/ci.yml)
+![Node](https://img.shields.io/badge/node-%E2%89%A518.18-2f7d5b)
+![Tillar](https://img.shields.io/badge/tillar-o%CA%BBzbek%20(lotin%2C%20kirill)%20%C2%B7%20rus-0e6b5c)
+![WCAG](https://img.shields.io/badge/WCAG%202.2-AA-0e6b5c)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+> Fuqaro muammosini o‘z so‘zi bilan yozadi — bir daqiqada **qaysi qonun himoya qilishi**, **necha kun qolgani**, **qayerga borish** va **qaysi dalillarni yig‘ish** kerakligini biladi va **tayyor arizani** Word yoki PDF qilib oladi.
+
+![HuquqYo‘l — reja sahifasi](docs/screenshots/02-reja.png)
+
+## Muammo
+
+Huquqi buzilgan fuqaro uch narsani bilmaydi: qaysi qonun himoya qiladi, qayerga borish kerak va muddat qachon tugaydi. Yurist xizmati qimmat, ariza yozish qo‘rqinchli — natijada odamlar kutib qoladi yoki muddatni o‘tkazib yuboradi. Eng ko‘p zarar ko‘radiganlar: keksalar, qishloq aholisi va xorijdagi mehnat migrantlari.
+
+## Yechim
+
+| 1. Vaziyat | 2. Reja | 3. Ariza |
+|---|---|---|
+| O‘z so‘zi bilan yozadi yoki aytadi (o‘zbekcha lotin/kirill, ruscha) yoki sohani tanlaydi | Qonun moddasi (lex.uz havolasi), muddat va xavf, kalkulyator, qadamlar, **qayerga borish** (rasmiy manzil va telefon), **dalillar ro‘yxati** | Tayyor talabnoma, ariza, shikoyat yoki da’vo — ish beruvchi, inspeksiya, idora yoki sudga; DOCX, PDF, chop etish |
+
+**Nimasi bilan ajralib turadi**
+
+- **Qonunni AI o‘ylab topmaydi.** 60 ta norma va 13 ta idora ma’lumoti rasmiy manbalardan qo‘lda tekshirilgan, har birida manba bor. AI faqat tasniflaydi; muddat, summa va ariza matni — tekshirilgan formula va shablonlar. AI ishlamasa ham ilova to‘liq ishlaydi.
+- **Muddat qonun bo‘yicha hisoblanadi** (MK 9-modda: oy oxiri, dam olish kuni → keyingi ish kuni).
+- **Keksalar uchun:** 4 darajali katta shrift va matnlarni ovozli o‘qish.
+- **Maxfiylik:** ariza ma’lumotlari faqat qurilmada; anonim statistika faqat sanoq — matn, IP, cookie saqlanmaydi.
+- **Internetsiz ishlaydi** (PWA): shriftlar, bilim bazasi va hujjat generatori loyiha ichida.
+
+## Raqamlarda
+
+| Sohalar / holatlar | Normalar | Hujjat shablonlari | Dalillar | Idoralar | Kalkulyatorlar | Testlar |
+|---|---|---|---|---|---|---|
+| 12 / 23 | 60 (53 tasi modda raqami bilan) | 53 × 3 til = 159 | 120 | 13 | 5 | 61 unit + 10 brauzer |
+
+## Ko‘rinishlar
+
+| | |
+|---|---|
+| ![Bosh sahifa](docs/screenshots/01-bosh-sahifa.png) Bosh sahifa: vaziyatni yozish yoki 12 sohadan birini tanlash | ![Qayerga borish](docs/screenshots/03-qayerga-borish.png) Qadamlar va «Qayerga murojaat qilish» — rasmiy manzil, telefon, manba |
+| ![Ariza](docs/screenshots/04-ariza.png) Ariza siz yozgan sari to‘ladi; kimga yozish bir bosishda almashadi | ![Qulaylik](docs/screenshots/06-qulaylik.png) Qulaylik: shrift o‘lchami va ovozli o‘qish |
+| ![Telefon, qorong‘i mavzu](docs/screenshots/05-telefon-qorongi.png) Telefon, qorong‘i mavzu | ![Statistika](docs/screenshots/07-statistika-namuna.png) Anonim statistika (rasmda **namunaviy** sanoqlar) |
+
+## Arxitektura
+
+```mermaid
+flowchart LR
+  U[Fuqaro: matn / ovoz / soha] --> A["/api/analyze"]
+  A --> R[BM25 qidiruv + kalit so‘zlar<br/>60 norma, 23 holat]
+  R --> C{Claude bormi?}
+  C -- ha --> AI[Claude: tasniflash va faktlar<br/>faqat bazadagi normalar]
+  C -- yo‘q --> RU[Qoidalar bo‘yicha tasniflash]
+  AI --> P["/api/plan: muddat, kalkulyator,<br/>qadamlar, idoralar, dalillar"]
+  RU --> P
+  P --> D["/api/document: shablon dvigateli<br/>→ DOCX / PDF (uz, cyr, ru)"]
+  KB[(scripts/build-kb.py + kb_ru.py<br/>kb_evidence.py, kb_offices.py)] -. npm run kb .-> R
+  P -. faqat sanoq .-> S[(Anonim statistika)]
+```
+
+Backend — Node.js + Express (holatsiz), frontend — freymvorksiz ES modullar, server tomonida oldindan chiziladi. Bilim bazasi — Python generator: ikki tilning mosligini, shablon kalitlarini, dalillar sonini va idoralar manbasini tekshiradi.
+
+## 1 daqiqada ishga tushirish
+
+```bash
+npm ci
+npm start            # http://localhost:3000 — AI kalitisiz ham to‘liq ishlaydi
+```
+
+Taqdimot ssenariysi, zaxira reja va hakamlar savollariga javoblar — [DEMO.md](DEMO.md). Hostingga joylashtirish (cPanel, VPS, Docker, Render) — [DEPLOY.md](DEPLOY.md). Xavfsizlik va maxfiylik — [SECURITY.md](SECURITY.md). O‘zgarishlar tarixi — [CHANGELOG.md](CHANGELOG.md).
+
+## Yo‘l xaritasi
+
+- my.sud.uz va my.gov.uz orqali arizani to‘g‘ridan-to‘g‘ri topshirish;
+- chek, qaror yoki kvitansiya rasmini o‘qish (OCR) va maydonlarni avtomatik to‘ldirish;
+- Telegram bot (migrantlar uchun eng qulay kanal);
+- qoraqalpoq tili;
+- yuridik klinikalar va advokatlar bilan hamkorlik: murakkab ishni bir bosishda yuristga yo‘naltirish;
+- yangi sohalar: anonim statistikadagi «doiradan tashqari» so‘rovlar asosida.
+
+## Imkoniyatlar
 
 Fuqaro muammosini oddiy tilda yozadi yoki sohani tanlaydi. Tizim vaziyatni tahlil qiladi va quyidagilarni beradi: tegishli qonun normalari (lex.uz havolasi bilan), qadamma-qadam reja, muddat va xavf bahosi, kalkulyator, hamda tayyor ariza. Ariza DOCX, PDF yoki chop etish uchun tayyor holatda chiqadi.
 
@@ -6,7 +86,6 @@ Fuqaro muammosini oddiy tilda yozadi yoki sohani tanlaydi. Tizim vaziyatni tahli
 
 Vaziyatni ovoz bilan aytish mumkin (brauzer qo‘llasa). Tahlil noaniq bo‘lsa, ilova yaqin holatlarni taklif qiladi va bir bosishda almashtiradi. Rejadagi muddatni bir tugma bilan telefon kalendariga eslatma (.ics, 3 kun oldin va oxirgi kun) qilib qo‘shish, rejani alohida chop etish mumkin.
 
-Taqdimot ssenariysi va hakamlar savollariga javoblar — [DEMO.md](DEMO.md). Hostingga joylashtirish (cPanel, VPS, Docker, Render) — [DEPLOY.md](DEPLOY.md).
 
 ## Qamrab olingan sohalar (12 soha, 23 holat)
 
@@ -33,8 +112,8 @@ Node.js 18.18 yoki undan yangi versiya kerak (tavsiya: 20 yoki 22).
 npm install
 cp .env.example .env      # ANTHROPIC_API_KEY ni yozing (ixtiyoriy)
 npm start                 # http://localhost:3000
-npm test                  # 55 ta unit/API test (jumladan ruscha va kirillcha)
-npm run test:e2e          # 9 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
+npm test                  # 61 ta unit/API test (jumladan ruscha va kirillcha)
+npm run test:e2e          # 10 ta brauzer testi (Playwright kerak: npm i --no-save playwright)
 ```
 
 API kaliti bo‘lmasa ham ilova to‘liq ishlaydi. Bu holda tahlilni BM25 qidiruvi va kalit so‘zlar bajaradi. Kalit qo‘shilsa, tahlilni Claude bajaradi. Claude faqat qidiruv topgan normalarga tayanadi va bazada yo‘q modda raqamlari javobdan avtomatik olib tashlanadi.
@@ -48,7 +127,7 @@ docker run -p 3000:3000 -e ANTHROPIC_API_KEY=sk-ant-... huquqyol
 
 Bepul joylashtirish: Render’da repo ulanadi, `render.yaml` hamma narsani o‘zi sozlaydi (faqat `ANTHROPIC_API_KEY` ni kiriting). Railway va boshqa platformalarda start buyrug‘i `npm start`.
 
-## Arxitektura
+## Fayllar tuzilishi
 
 ```
 public/            Frontend: 3 ekran (Vaziyat → Reja → Ariza), freymvorksiz JS
@@ -90,7 +169,7 @@ test/              node:test — sana, reja, RAG, API, xavfsizlik, kirill, DOCX/
 
 ## Tezlik
 
-Lighthouse (production rejim): **Performance 100, Accessibility 100, Best Practices 100, SEO 100**. Ko‘rsatkichlar: FCP 0,9 s, LCP 1,2 s, CLS 0, TBT 0 ms.
+v2.1 da o‘lchangan Lighthouse natijasi (production rejim): Performance, Accessibility, Best Practices va SEO — 100. O‘shandan beri sahifaga yangi imkoniyatlar qo‘shilgan, shuning uchun taqdimotdan oldin DevTools → Lighthouse bilan qayta o‘lchang.
 - Bosh sahifa serverda oldindan chiziladi: soha kartalari va meta-ma’lumot HTML ichida keladi, sahifa ochilganda tarkib siljimaydi.
 - CSS/JS fayllar kontent xeshi bilan versiyalanadi (`?v=…`) va bir yil keshlanadi; HTML har safar tekshiriladi.
 - Barcha matnli javoblar gzip bilan siqiladi; shriftlar alfavit bo‘yicha bo‘lib yuklanadi.
@@ -104,6 +183,7 @@ Lighthouse (production rejim): **Performance 100, Accessibility 100, Best Practi
 - Rejada «Ariza tayyorlash» tugmasi doim ko‘rinib turadi. Muddat hisoblanadigan sana yonida uni tekshirish eslatmasi bor.
 - To‘ldirilmagan joylar hisoblab ko‘rsatiladi, to‘ldirish chizig‘i bilan. Bossangiz, kerakli maydonga olib boradi. Majburiy maydonlar `*` bilan belgilanadi.
 - Ariza Word yoki PDF qilib yuklab olinadi, brauzerdan chop etiladi yoki matn sifatida nusxalanadi.
+- **Anonim statistika** — `/statistika` sahifasi (footer’da havola) va `GET /api/stats`: sohalar va holatlar bo‘yicha murojaatlar, yasalgan hujjatlar, «doiradan tashqari» so‘rovlar ulushi, so‘nggi 30 kun. Saqlanmaydi: matn, ariza ma’lumotlari, IP, cookie, brauzer ma’lumoti. Bir kishi bir kunda bir holatni bir marta sanaladi — buning uchun IP tasodifiy kalit bilan HMAC qilinadi, iz faqat xotirada turadi va har kuni kalit bilan birga o‘chiriladi. Sanoqlar `data/stats.json` ga 30 soniyada bir atomar yoziladi; kunlik ma’lumot 400 kundan keyin o‘chiriladi. `STATS=0` — o‘chirish, `STATS_FILE` — fayl joyi. Sahifa JavaScript’siz, diagrammalar SVG va jadval ko‘rinishi bilan.
 - **Qulaylik (keksalar va ko‘rishi zaif foydalanuvchilar uchun)** — sarlavhadagi «Aa Qulaylik» tugmasi:
   - *Shrift o‘lchami*: Oddiy, Katta (115%), Juda katta (130%), Eng katta (150%). Barcha matnlar bitta `--fs` ko‘paytiruvchisi orqali kattalashadi, katta o‘lchamlarda kartalar kamroq ustunga o‘tadi; 320 px ekranda ham gorizontal siljish yo‘q. Tanlov `hy_fs` cookie’da saqlanadi va server sahifani darhol shu o‘lchamda chizadi (sakrash bo‘lmaydi).
   - *Ovozli o‘qish*: «Sahifani o‘qib berish» (bosh sahifa, reja yoki ariza), rejada va arizada alohida «Tinglash» tugmalari. Belgilangan matn bo‘lsa, faqat o‘sha qism o‘qiladi. O‘qilayotgan qism ekranda belgilanadi, tepada «Pauza / To‘xtatish» paneli chiqadi, Esc — to‘xtatish, tezlik «Sekin» yoki «Oddiy».

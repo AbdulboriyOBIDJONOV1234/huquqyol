@@ -15,6 +15,8 @@ import { cyrillicModel } from "../public/translit.js";
 import { domainCardsHTML, examplesHTML } from "../public/shared.js";
 import { makeT, LANGS, HTML_LANG } from "../public/i18n.js";
 import { resolveLang, parseLang, deepCyr, msg, LANG_COOKIE } from "./i18n.js";
+import { stats, DEFAULT_FILE as STATS_FILE } from "./stats.js";
+import { statsPage } from "./statsPage.js";
 
 // Til: uz va ru o‘z bazasidan, cyr — uz natijasining kirill shakli
 const base = lang => lang === "ru" ? "ru" : "uz";
@@ -59,10 +61,17 @@ app.get("/api/meta", (req, res) => res.set("Vary", "Cookie, Accept-Language").js
 
 app.post("/api/analyze", rateLimit({ max: 15, name:"analyze" }), wrap(async (req, res) => {
   const v = vAnalyze(req.body);
-  res.json(out(req.lang, await analyze(v.text, base(req.lang))));
+  const r = await analyze(v.text, base(req.lang));
+  stats.record("analyze", { scenario: r.scenario, ip: req.ip });          // faqat natija holati; matn sanalmaydi ham, saqlanmaydi ham
+  res.json(out(req.lang, r));
 }));
 
-app.post("/api/plan", rateLimit({ max: 120, name:"plan" }), (req, res) => { const v = vPlan(req.body); res.json(out(req.lang, buildPlan({ ...v, lang: base(v.lang) }))); });
+app.post("/api/plan", rateLimit({ max: 120, name:"plan" }), (req, res) => {
+  const v = vPlan(req.body);
+  const p = buildPlan({ ...v, lang: base(v.lang) });
+  if (req.body?.open === true) stats.record("open", { scenario: p.scenario, domain: p.info.domain, ip: req.ip });   // reja birinchi ochilganda
+  res.json(out(req.lang, p));
+});
 
 app.post("/api/document/preview", rateLimit({ max: 240, name:"preview" }), (req, res) => res.json(buildModel(req)));
 
@@ -71,11 +80,16 @@ app.post("/api/document/:format", rateLimit({ max: 30, name:"file" }), wrap(asyn
   if (fmt !== "docx" && fmt !== "pdf") return res.status(404).json({ error: msg(req.lang, "format") });
   const model = buildModel(req);
   const buf = fmt === "docx" ? await toDocx(model) : await toPdf(model);
+  stats.record("doc", { scenario: model.scenario, ip: req.ip });
   res.set({
     "Content-Type": fmt === "docx" ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : "application/pdf",
     "Content-Disposition": `attachment; filename="${safeName(`HuquqYol-${model.scenario}-${model.recipient}.${fmt}`)}"`
   }).send(buf);
 }));
+
+// Anonim statistika: faqat yig‘ma sanoqlar (holat → soha)
+const SCEN_DOMAIN = Object.fromEntries(SCENARIOS.map(s => [s.id, s.domain]));
+app.get("/api/stats", (req, res) => res.json(stats.summary({ scenarioDomain: SCEN_DOMAIN })));
 
 app.use("/api", (req, res) => res.status(404).json({ error: msg(req.lang, "notFound") }));
 
@@ -97,14 +111,20 @@ const versioned = (html, list) => list.reduce((h, f) => h.replaceAll(`"/${f}"`, 
 const jsonForHtml = o => JSON.stringify(o).replace(/</g, "\\u003c").replace(/\u2028|\u2029/g, "");
 const escAttr = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const TEMPLATE = versioned(readFileSync(join(PUBLIC, "index.html"), "utf8"), ASSETS);
+// Ijtimoiy tarmoqlar (Telegram, Facebook) uchun to‘liq URL: PUBLIC_HOST berilgan bo‘lsa
+const OG_BASE = /^[a-z0-9.-]+(?::\d+)?$/i.test(process.env.PUBLIC_HOST || "") ? `https://${process.env.PUBLIC_HOST}` : "";
+const OG_LOCALE = { uz:"uz_UZ", cyr:"uz_UZ", ru:"ru_RU" };
 function renderIndex(lang){
   const t = makeT(lang), meta = { ai: aiEnabled(), ...META[lang] };
   return TEMPLATE
+    .replace("{{ogBase}}", OG_BASE).replace("{{ogLocale}}", OG_LOCALE[lang])
+    .replace("{{ogUrl}}", OG_BASE ? `
+<meta property="og:url" content="${OG_BASE}/?lang=${lang}">` : "")
     .replace("<!--DOMAINS-->", domainCardsHTML(meta, t))
     .replace("<!--EXAMPLES-->", examplesHTML(lang))
     .replace("<!--META-->", `<script type="application/json" id="meta-data">${jsonForHtml(meta)}</script>`)
     .replace(`data-lang="${lang}" aria-pressed="false"`, `data-lang="${lang}" aria-pressed="true"`)
-    .replace(/\{\{(\w+)\}\}/g, (_, k) => k === "htmlLang" ? HTML_LANG[lang] : k === "lang" ? lang : k === "aiText" ? escAttr(t(meta.ai ? "aiOn" : "aiOff")) : escAttr(t(k)));
+    .replace(/\{\{(\w+)\}\}/g, (_, k) => k === "htmlLang" ? HTML_LANG[lang] : k === "lang" ? lang : k === "aiText" ? escAttr(t(meta.ai ? "aiOn" : "aiOff")) : k === "privacy" ? escAttr(t(meta.ai ? "privacyAi" : "privacy")) : escAttr(t(k)));
 }
 const INDEX = Object.fromEntries(LANGS.map(l => [l, renderIndex(l)]));
 app.get(["/", "/index.html"], (req, res) => {
@@ -114,6 +134,13 @@ app.get(["/", "/index.html"], (req, res) => {
   const fs = /(?:^|;\s*)hy_fs=([1-3])(?:;|$)/.exec(req.headers.cookie || "")?.[1];
   const html = fs ? INDEX[req.lang].replace("<html ", `<html data-fs="${fs}" `) : INDEX[req.lang];
   res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html").send(html);
+});
+app.get("/statistika", (req, res) => {
+  const forced = parseLang(req.query.lang);
+  if (forced) res.cookie(LANG_COOKIE, forced, { maxAge: 365 * 864e5, sameSite:"lax", path:"/" });
+  const fs = /(?:^|;\s*)hy_fs=([1-3])(?:;|$)/.exec(req.headers.cookie || "")?.[1];
+  res.set({ "Cache-Control":"no-cache", "Vary":"Cookie, Accept-Language", "Content-Language": HTML_LANG[req.lang] }).type("html")
+    .send(statsPage({ lang: req.lang, s: stats.summary({ scenarioDomain: SCEN_DOMAIN }), cssHref: `/app.css?v=${VER["app.css"]}`, fs }));
 });
 // JS modullari ichidagi importlar ham versiyalanadi
 const rewriteImports = src => MODULES.reduce((h, f) => h.replaceAll(`"/${f}"`, `"/${f}?v=${VER[f]}"`).replaceAll(`"./${f}"`, `"/${f}?v=${VER[f]}"`), src);
@@ -155,11 +182,12 @@ app.use((err, req, res, next) => {
 // Serverni ishga tushirish. Hosting (Passenger/cPanel) PORT ni o‘zi beradi; VPS’da HOST=127.0.0.1 bilan
 // faqat Nginx orqali ochiladi. Passenger’da port raqam emas, soket yo‘li bo‘lishi mumkin.
 export function start({ port = process.env.PORT || 3000, host = process.env.HOST } = {}){
+  stats.attachFile(STATS_FILE);                                   // anonim statistika faqat haqiqiy ishga tushirishda diskka yoziladi
   const p = /^\d+$/.test(String(port)) ? Number(port) : port;
   const onListen = () => console.log(`HuquqYo‘l ishga tushdi: ${typeof p === "number" ? `http://${host || "localhost"}:${p}` : p}  (AI: ${aiEnabled() ? "Claude" : "o‘chiq — qidiruv rejimi"})`);
   const server = host && typeof p === "number" ? app.listen(p, host, onListen) : app.listen(p, onListen);
   server.requestTimeout = 30_000; server.headersTimeout = 15_000; server.keepAliveTimeout = 65_000;
-  const stop = () => { server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 8000).unref(); };
+  const stop = () => { stats.close(); server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 8000).unref(); };   // statistika diskka yoziladi
   process.once("SIGTERM", stop); process.once("SIGINT", stop);
   return server;
 }

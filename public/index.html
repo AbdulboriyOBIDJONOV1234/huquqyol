@@ -13,7 +13,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{metaDesc}}">
-<meta property="og:image" content="/icons/icon-512.png">
+<meta property="og:image" content="{{ogBase}}/icons/icon-512.png">
+<meta property="og:locale" content="{{ogLocale}}">{{ogUrl}}
 <meta name="twitter:card" content="summary">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
@@ -135,7 +136,7 @@
   <footer>
     <div><b>{{disclaimerB}}</b> {{disclaimer}}</div>
     <div>{{sources}} <a href="https://lex.uz" target="_blank" rel="noopener noreferrer">lex.uz</a>. {{checked}}</div>
-    <div>{{local}} <button class="linkbtn" id="wipe" type="button">{{wipe}}</button></div>
+    <div>{{local}} <button class="linkbtn" id="wipe" type="button">{{wipe}}</button> · <a href="/statistika">{{stLink}}</a></div>
   </footer>
 </div>
 <dialog class="dlg" id="dlg" aria-labelledby="dlgT" aria-describedby="dlgP">

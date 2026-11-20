@@ -90,8 +90,10 @@ sudo apt install -y certbot python3-certbot-nginx && sudo certbot --nginx -d SIZ
 ```bash
 docker build -t huquqyol .
 docker run -d --name huquqyol --restart unless-stopped -p 127.0.0.1:3000:3000 \
-  -e TRUST_PROXY=1 -e ANTHROPIC_API_KEY=... huquqyol
+  -e TRUST_PROXY=1 -e ANTHROPIC_API_KEY=... -v huquqyol-data:/app/data huquqyol
 ```
+
+`-v huquqyol-data:/app/data` — anonim statistika konteyner yangilanganda ham saqlanib qolishi uchun.
 
 Konteyner root bo‘lmagan foydalanuvchida ishlaydi va o‘z health check’iga ega. Tashqariga Nginx (B bo‘limidagi 4-qadam) orqali chiqaring.
 
@@ -105,6 +107,8 @@ Konteyner root bo‘lmagan foydalanuvchida ishlaydi va o‘z health check’iga 
 
 Bepul tarifda server 15 daqiqa ishlatilmasa uxlaydi va birinchi ochilish 30–50 soniya oladi. Taqdimotdan oldin sahifani bir marta ochib qo‘ying.
 
+Bepul tarifda disk doimiy emas: qayta joylashtirilganda anonim statistika noldan boshlanadi. Saqlab qolish uchun pullik tarifda Persistent Disk ulang va `STATS_FILE` ni shu diskdagi faylga yo‘naltiring (masalan `/var/data/stats.json`).
+
 ---
 
 ## Joylashtirgandan keyin tekshiruv ro‘yxati
@@ -114,6 +118,7 @@ Bepul tarifda server 15 daqiqa ishlatilmasa uxlaydi va birinchi ochilish 30–50
 - [ ] **O‘zb / Ўзб / Рус** tillari almashadi.
 - [ ] Biror holat → **Ariza** → **Namuna bilan to‘ldirish** → **PDF** va **Word** yuklanadi.
 - [ ] Telefonda ochib ko‘ring. «Bosh ekranga qo‘shish» bosilsa, ilova (PWA) sifatida o‘rnatiladi.
+- [ ] `/statistika` ochiladi; biror holatni ochgandan keyin «Murojaatlar» soni oshadi. Ilova papkasida `data/` ga yozish huquqi bo‘lishi kerak (cPanel va VPS’da odatda bor). Statistika 30 soniyada bir va to‘xtatilganda diskka yoziladi.
 
 ## Muammolar
 
